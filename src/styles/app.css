@@ -42,7 +42,7 @@ button {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  transition: transform 0.3s ease, visibility 0.3s ease;
+  transition: transform 0.3s ease, width 0.3s ease, padding 0.3s ease, border-color 0.3s ease;
   /* allow sidebar content to scroll if it grows taller than the viewport */
   max-height: 100vh;
   overflow-y: auto;
@@ -50,7 +50,10 @@ button {
 
 .sidebar.hidden {
   transform: translateX(-100%);
-  /* keep width so layout shifts smoothly, avoid abrupt visibility toggle */
+  width: 0;
+  padding: 0;
+  border-right-color: transparent;
+  overflow: hidden;
 }
 
 .brand {
@@ -212,8 +215,14 @@ button {
 
 .dashboard {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 20px;
+}
+
+@media (min-width: 900px) {
+  .dashboard {
+    grid-template-columns: repeat(6, minmax(120px, 1fr));
+  }
 }
 
 .card {
@@ -606,6 +615,245 @@ input::placeholder {
 
   .sidebar {
     padding: 20px 14px;
+  }
+}
+
+@media (max-width: 500px) {
+  .app {
+    min-height: 100dvh;
+  }
+
+  body {
+    font-size: 14px;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 16px 12px;
+    max-height: auto;
+    gap: 16px;
+  }
+
+  .brand h2 {
+    font-size: 1.25rem;
+  }
+
+  .sidebar h2 {
+    font-size: 1.35rem;
+  }
+
+  .content {
+    padding: 16px 12px 20px;
+    flex: 1;
+  }
+
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .page-header {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .dashboard {
+    gap: 12px;
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    min-height: 110px;
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .card h3 {
+    font-size: 1.5rem;
+  }
+
+  .card-label {
+    font-size: 0.85rem;
+  }
+
+  .cutoff-tabs {
+    margin-top: 16px;
+  }
+
+  .cutoff-tabs-inner {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .tab-button {
+    flex: 1;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+
+  .tracker-panel {
+    margin-top: 16px;
+    padding: 16px;
+    border-radius: 16px;
+    min-height: 240px;
+    max-height: 50vh;
+  }
+
+  .tracker-header {
+    margin-bottom: 12px;
+  }
+
+  .tracker-header h2 {
+    font-size: 1.1rem;
+  }
+
+  .tracker-header p {
+    font-size: 0.8rem;
+  }
+
+  .entry-card {
+    padding: 14px;
+    border-radius: 12px;
+    gap: 10px;
+  }
+
+  .entry-title {
+    font-size: 0.95rem;
+  }
+
+  .entry-note {
+    font-size: 0.85rem;
+    min-height: 36px;
+  }
+
+  .entry-amount {
+    font-size: 1.1rem;
+  }
+
+  .modal-card {
+    width: calc(100vw - 16px);
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .modal-header {
+    margin-bottom: 16px;
+  }
+
+  .modal-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .modal-form {
+    max-height: 70vh;
+    gap: 14px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  label {
+    gap: 8px;
+    font-size: 0.95rem;
+  }
+
+  input,
+  select {
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 16px;
+  }
+
+  .type-chip {
+    flex: 1;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+  }
+
+  .form-actions {
+    gap: 10px;
+  }
+
+  .primary-button,
+  .secondary-button {
+    padding: 12px 18px;
+    font-size: 0.95rem;
+    border-radius: 12px;
+  }
+
+  .icon-button {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  .menu-title {
+    font-size: 0.75rem;
+    margin-bottom: 10px;
+  }
+
+  .month,
+  .nav-item {
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+  }
+
+  .empty-state {
+    padding: 24px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+  }
+
+  .summary-card {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .summary-item {
+    font-size: 0.85rem;
+  }
+
+  .summary-pill {
+    padding: 10px 14px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .dashboard {
+    gap: 10px;
+  }
+
+  .card {
+    padding: 12px;
+    min-height: 100px;
+  }
+
+  .card h3 {
+    font-size: 1.3rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.25rem;
+  }
+
+  .sidebar {
+    padding: 12px 10px;
+  }
+
+  .brand h2 {
+    font-size: 1.1rem;
+  }
+
+  .tracker-panel {
+    padding: 12px;
+  }
+
+  .entry-card {
+    padding: 12px;
   }
 }
 
