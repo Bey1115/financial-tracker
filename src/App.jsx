@@ -765,6 +765,8 @@ function App() {
         onDeleteTemplate={deleteTemplate}
         overallSavings={financeData.overallSavings || []}
         overallDebts={financeData.overallDebts || []}
+        onManageTemplates={() => setIsTemplateModalOpen(true)}
+        onLogout={handleLogout}
         onClose={() => setIsSidebarOpen(false)}
       />
 
@@ -797,9 +799,6 @@ function App() {
                       Install app
                     </button>
                   )}
-                  <button className="secondary-button" onClick={() => setIsTemplateModalOpen(true)}>
-                    Manage templates
-                  </button>
                   <button className="primary-button" onClick={() => setIsModalOpen(true)}>
                     + Add entry
                   </button>

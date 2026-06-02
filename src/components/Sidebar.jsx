@@ -18,6 +18,8 @@ export default function Sidebar({
   onDeleteTemplate,
   overallSavings = [],
   overallDebts = [],
+  onManageTemplates,
+  onLogout,
   onClose,
 }) {
   const [touchStartX, setTouchStartX] = useState(null);
@@ -106,6 +108,18 @@ export default function Sidebar({
           ))}
           <button type="button" className="month add-action" onClick={onAddMonth}>
             + Add month
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <div className="menu-title">Actions</div>
+        <div className="bottom-menu">
+          <button type="button" className="nav-item" onClick={onManageTemplates}>
+            Manage templates
+          </button>
+          <button type="button" className="nav-item" onClick={onLogout}>
+            Log out
           </button>
         </div>
       </div>
