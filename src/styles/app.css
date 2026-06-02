@@ -265,6 +265,27 @@ button {
   color: #e2e8f0;
 }
 
+.dashboard-header {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.12);
+  margin-bottom: 20px;
+}
+
+.dashboard-header h2 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.dashboard-header .card-label {
+  margin: 0 0 8px;
+}
+
 .dashboard {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -398,6 +419,33 @@ button {
   border-radius: 999px;
 }
 
+.tracker-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-button {
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  background: rgba(255, 255, 255, 0.04);
+  color: #cbd5e1;
+  padding: 10px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.15s ease;
+}
+
+.filter-button:hover {
+  background: rgba(56, 189, 248, 0.12);
+}
+
+.filter-button.active {
+  background: rgba(56, 189, 248, 0.2);
+  color: #f8fafc;
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
 .summary-pill {
   font-size: 0.85rem;
 }
@@ -428,6 +476,11 @@ button {
   padding: 22px;
   display: grid;
   gap: 14px;
+}
+
+.entry-card.excluded {
+  opacity: 0.7;
+  filter: grayscale(0.2);
 }
 
 .entry-meta {
@@ -884,10 +937,80 @@ input::placeholder {
   .summary-item {
     font-size: 0.85rem;
   }
+}
 
-  .summary-pill {
-    padding: 10px 14px;
+@media (max-width: 500px) {
+  body {
+    font-size: 13px;
+  }
+
+  .brand h2 {
+    font-size: 1.1rem;
+  }
+
+  .sidebar h2 {
+    font-size: 1.2rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.3rem;
+  }
+
+  .card h3 {
+    font-size: 1rem;
+  }
+
+  .tab-button,
+  .filter-button,
+  .month,
+  .nav-item {
     font-size: 0.8rem;
+  }
+
+  .tracker-header h2 {
+    font-size: 0.95rem;
+  }
+
+  .tracker-header p {
+    font-size: 0.75rem;
+  }
+
+  .entry-title {
+    font-size: 0.88rem;
+  }
+
+  .entry-note {
+    font-size: 0.78rem;
+  }
+
+  .entry-amount {
+    font-size: 0.95rem;
+  }
+
+  .primary-button,
+  .secondary-button {
+    font-size: 0.85rem;
+  }
+
+  label {
+    font-size: 0.88rem;
+  }
+
+  .menu-title {
+    font-size: 0.72rem;
+  }
+
+  .summary-item {
+    font-size: 0.78rem;
+  }
+
+  .empty-state {
+    font-size: 0.82rem;
+  }
+
+  input,
+  select {
+    font-size: 14px;
   }
 }
 

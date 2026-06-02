@@ -49,6 +49,14 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [currentPage, setCurrentPage] = useState("dashboard"); // dashboard, savings, debts, expenses
   const [editingEntry, setEditingEntry] = useState(null);
+  const [entryFilter, setEntryFilter] = useState("all");
+
+  const filterTypes = [
+    { label: "Income", value: "income" },
+    { label: "Expenses", value: "expenses" },
+    { label: "Savings", value: "savings" },
+    { label: "Debts", value: "debts" },
+  ];
 
   useEffect(() => {
     if (window.innerWidth < 900) {
@@ -87,10 +95,12 @@ function App() {
   const currentMonthData = yearData.months?.[currentMonth] || createEmptyMonth();
   const cutoffData = currentMonthData[activeCutoff] || currentMonthData.firstCutoff;
 
+  const isEntryIncluded = (entry) => entry.included !== false;
+
   const totals = {
-    income: (cutoffData.income || []).filter((it) => !it.fundFromOverall).reduce((sum, item) => sum + Number(item.amount || 0), 0),
-    expenses: (cutoffData.expenses || []).filter((it) => !it.fundFromOverall).reduce((sum, item) => sum + Number(item.amount || 0), 0),
-    savings: (cutoffData.savings || []).filter((it) => !it.fundFromOverall).reduce((sum, item) => sum + Number(item.amount || 0), 0),
+    income: (cutoffData.income || []).filter((it) => !it.fundFromOverall && isEntryIncluded(it)).reduce((sum, item) => sum + Number(item.amount || 0), 0),
+    expenses: (cutoffData.expenses || []).filter((it) => !it.fundFromOverall && isEntryIncluded(it)).reduce((sum, item) => sum + Number(item.amount || 0), 0),
+    savings: (cutoffData.savings || []).filter((it) => !it.fundFromOverall && isEntryIncluded(it)).reduce((sum, item) => sum + Number(item.amount || 0), 0),
   };
   const overallDebtsArr = financeData.overallDebts || [];
   const currentMonthDebts = overallDebtsArr.filter((debt) => {
@@ -107,22 +117,23 @@ function App() {
     }
     return false;
   });
+  const activeMonthDebts = currentMonthDebts.filter(isEntryIncluded);
 
-  const cutoffMyDebtsTotal = currentMonthDebts.reduce((sum, it) => {
+  const cutoffMyDebtsTotal = activeMonthDebts.reduce((sum, it) => {
     const amount = Number(it.amount || 0);
     if (it.direction === "IOwe") {
       return sum + (it.debtAction === "Pay" ? -amount : amount);
     }
     return sum;
   }, 0);
-  const cutoffOthersDebtsTotal = currentMonthDebts.reduce((sum, it) => {
+  const cutoffOthersDebtsTotal = activeMonthDebts.reduce((sum, it) => {
     const amount = Number(it.amount || 0);
     if (it.direction === "TheyOwe") {
       return sum + (it.debtAction === "Pay" ? -amount : amount);
     }
     return sum;
   }, 0);
-  const cutoffDebtAdjustment = currentMonthDebts.reduce((sum, it) => {
+  const cutoffDebtAdjustment = activeMonthDebts.reduce((sum, it) => {
     const amount = Number(it.amount || 0);
     if (it.direction === "IOwe" && it.debtAction === "Borrow") return sum + amount;
     if (it.direction === "IOwe" && it.debtAction === "Pay") return sum - amount;
@@ -150,6 +161,122 @@ function App() {
       note: debt.debtAction === "Pay" ? `Payment – ${debt.note || "Debt payment"}` : debt.note,
     })),
   ].sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+  const filteredEntries = recentEntries.filter((entry) => {
+    if (entryFilter === "all") return true;
+    const normalizedType = String(entry.type || "").toLowerCase();
+    if (entryFilter === "debts") {
+      return normalizedType.includes("debt");
+    }
+    if (entryFilter === "savings") {
+      return normalizedType.includes("saving");
+    }
+    return normalizedType === entryFilter;
+  });
+
+  const currentCutoffEntries = recentEntries;
+  const allCurrentCutoffSelected = currentCutoffEntries.length > 0 && currentCutoffEntries.every(isEntryIncluded);
+
+  const activeEntries = recentEntries.filter(isEntryIncluded);
+  const visibleOverallSavings = (financeData.overallSavings || []).filter(isEntryIncluded);
+  const visibleOverallDebts = overallDebtsArr.filter(isEntryIncluded);
+
+  const matchEntry = (item, entry) => {
+    if (!item) return false;
+    if (entry.id && item.id === entry.id) return true;
+    const matchValue = (value) => String(value || "").trim().toLowerCase();
+    return (
+      matchValue(item.type) === matchValue(entry.type) &&
+      matchValue(item.category) === matchValue(entry.category) &&
+      matchValue(item.amount) === matchValue(entry.amount) &&
+      matchValue(item.date) === matchValue(entry.date) &&
+      matchValue(item.month) === matchValue(entry.month) &&
+      matchValue(item.year) === matchValue(entry.year) &&
+      matchValue(item.cutoff) === matchValue(entry.cutoff)
+    );
+  };
+
+  const updateCurrentCutoffItem = (cutoffData, entry, included) => {
+    if (!cutoffData || typeof cutoffData !== "object") return;
+    Object.keys(cutoffData).forEach((type) => {
+      if (!Array.isArray(cutoffData[type])) return;
+      cutoffData[type] = cutoffData[type].map((item) =>
+        matchEntry(item, entry) ? { ...item, included } : item
+      );
+    });
+  };
+
+  const toggleEntryIncluded = (entry, included) => {
+    setFinanceData((previous) => {
+      const next = JSON.parse(JSON.stringify(previous));
+      const monthData = next.years?.[selectedYear]?.months?.[currentMonth];
+      if (monthData) {
+        const cutoffData = monthData[activeCutoff] || monthData.firstCutoff;
+        updateCurrentCutoffItem(cutoffData, entry, included);
+      }
+
+      if (Array.isArray(next.overallDebts)) {
+        next.overallDebts = next.overallDebts.map((item) =>
+          matchEntry(item, entry) && item.month === currentMonth && String(item.year) === String(selectedYear) && item.cutoff === activeCutoff
+            ? { ...item, included }
+            : item
+        );
+      }
+
+      if (Array.isArray(next.overallSavings)) {
+        next.overallSavings = next.overallSavings.map((item) =>
+          matchEntry(item, entry) && item.month === currentMonth && String(item.year) === String(selectedYear)
+            ? { ...item, included }
+            : item
+        );
+      }
+
+      persistUserData(next);
+      return next;
+    });
+  };
+
+  const toggleAllCurrentCutoffEntries = (included) => {
+    setFinanceData((previous) => {
+      const next = JSON.parse(JSON.stringify(previous));
+      const monthData = next.years?.[selectedYear]?.months?.[currentMonth];
+      const currentCutoffData = monthData ? monthData[activeCutoff] || monthData.firstCutoff : null;
+
+      if (currentCutoffData) {
+        const entryIds = new Set(currentCutoffEntries.map((entry) => entry.id).filter(Boolean));
+        const entryMatches = currentCutoffEntries.map((entry) => entry);
+
+        Object.keys(currentCutoffData).forEach((type) => {
+          if (!Array.isArray(currentCutoffData[type])) return;
+          currentCutoffData[type] = currentCutoffData[type].map((item) => {
+            const matched = entryIds.has(item.id) || entryMatches.some((entry) => matchEntry(item, entry));
+            return matched ? { ...item, included } : item;
+          });
+        });
+      }
+
+      if (Array.isArray(next.overallDebts)) {
+        next.overallDebts = next.overallDebts.map((item) => {
+          const matched = currentCutoffEntries.some((entry) => matchEntry(item, entry));
+          return matched && item.month === currentMonth && String(item.year) === String(selectedYear) && item.cutoff === activeCutoff
+            ? { ...item, included }
+            : item;
+        });
+      }
+
+      if (Array.isArray(next.overallSavings)) {
+        next.overallSavings = next.overallSavings.map((item) => {
+          const matched = currentCutoffEntries.some((entry) => matchEntry(item, entry));
+          return matched && item.month === currentMonth && String(item.year) === String(selectedYear)
+            ? { ...item, included }
+            : item;
+        });
+      }
+
+      persistUserData(next);
+      return next;
+    });
+  };
 
   const persistUserData = (next) => {
     if (user) {
@@ -197,6 +324,7 @@ function App() {
       month: entry.month || currentMonth,
       year: entry.year || selectedYear,
       date: entry.date || getDefaultCutoffDate(entry.month || currentMonth, entry.year || selectedYear, entry.cutoff || activeCutoff),
+      included: entry.included !== false,
     };
 
     setFinanceData((previous) => {
@@ -321,6 +449,7 @@ function App() {
       year: entry.year || selectedYear,
       date: entry.date || getDefaultCutoffDate(entry.month || currentMonth, entry.year || selectedYear, entry.cutoff || activeCutoff),
       id: entry.id || Date.now().toString(),
+      included: entry.included !== false,
     };
 
     setFinanceData((previous) => {
@@ -799,7 +928,6 @@ function App() {
         onManageTemplates={() => setIsTemplateModalOpen(true)}
         onExportData={handleExportData}
         onImportData={handleImportData}
-        onLogout={handleLogout}
         onClose={() => setIsSidebarOpen(false)}
       />
 
@@ -863,7 +991,6 @@ function App() {
                   Expenses
                 </button>
               </div>
-              <button className="secondary-button" onClick={handleLogout}>Logout</button>
             </div>
           </div>
         </header>
@@ -871,7 +998,7 @@ function App() {
         {/* Dashboard Page */}
         {currentPage === 'dashboard' && (
           <>
-            <Dashboard totals={totals} />
+            <Dashboard totals={totals} currentMonth={currentMonth} selectedYear={selectedYear} />
 
             <div className="cutoff-tabs">
               <CutoffTabs activeCutoff={activeCutoff} setActiveCutoff={setActiveCutoff} />
@@ -879,19 +1006,34 @@ function App() {
 
             <section className="tracker-panel">
               <div className="tracker-header">
-                <div>
-                  <h2>
-                    {currentMonth} • {cutoffLabels[activeCutoff]}
-                  </h2>
-                  <p>Use the dashboard to review totals, then add new entries to keep your budget accurate.</p>
+                <div className="tracker-filters">
+                  {filterTypes.map((filter) => (
+                    <button
+                      key={filter.value}
+                      type="button"
+                      className={`filter-button${entryFilter === filter.value ? " active" : ""}`}
+                      onClick={() => setEntryFilter((current) => (current === filter.value ? "all" : filter.value))}
+                    >
+                      {filter.label}
+                    </button>
+                  ))}
                 </div>
-                <div className="summary-pill">{recentEntries.length} entries</div>
+                {currentCutoffEntries.length > 0 && (
+                  <button
+                    type="button"
+                    className="secondary-button"
+                    onClick={() => toggleAllCurrentCutoffEntries(!allCurrentCutoffSelected)}
+                  >
+                    {allCurrentCutoffSelected ? "Unselect all" : "Select all"}
+                  </button>
+                )}
               </div>
 
               <div className="tracker-list">
                 <GroupedEntries
-                  entries={recentEntries}
+                  entries={filteredEntries}
                   onRemoveEntry={removeEntry}
+                  onToggleIncluded={toggleEntryIncluded}
                   onEditEntry={(entry) => {
                     setEditingEntry(entry);
                     setIsModalOpen(true);
@@ -905,7 +1047,7 @@ function App() {
         {/* Savings Page */}
         {currentPage === 'savings' && (
           <OverallSavings
-            overallSavings={financeData.overallSavings || []}
+            overallSavings={visibleOverallSavings}
             savingsGoals={financeData.savingsGoals || []}
             onCreateGoal={createSavingsGoal}
             onCompleteGoal={completeSavingsGoal}
@@ -917,7 +1059,7 @@ function App() {
         {/* Debts Page */}
         {currentPage === 'debts' && (
           <OverallDebts
-            overallDebts={financeData.overallDebts || []}
+            overallDebts={visibleOverallDebts}
             financeData={financeData}
             activeCutoff={activeCutoff}
             currentMonth={currentMonth}
@@ -929,7 +1071,7 @@ function App() {
 
         {/* Expenses Page */}
         {currentPage === 'expenses' && (
-          <ExpensesStatistics entries={recentEntries} currentMonth={currentMonth} />
+          <ExpensesStatistics entries={activeEntries} currentMonth={currentMonth} />
         )}
       </main>
 

@@ -1,9 +1,16 @@
 // Dashboard.jsx
 
-export default function Dashboard({ totals }) {
+export default function Dashboard({ totals, currentMonth, selectedYear }) {
   return (
-    <div className="dashboard">
-      <div className="card income">
+    <>
+      <div className="dashboard-header">
+        <div>
+          <p className="card-label">Month</p>
+          <h2>{currentMonth} {selectedYear}</h2>
+        </div>
+      </div>
+      <div className="dashboard">
+        <div className="card income">
         <p className="card-label">Income</p>
         <h3>₱{totals.income.toLocaleString()}</h3>
       </div>
@@ -33,5 +40,6 @@ export default function Dashboard({ totals }) {
         <h3>₱{totals.balance.toLocaleString()}</h3>
       </div>
     </div>
+    </>
   );
 }

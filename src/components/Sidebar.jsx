@@ -21,7 +21,6 @@ export default function Sidebar({
   onManageTemplates,
   onExportData,
   onImportData,
-  onLogout,
   onClose,
 }) {
   const fileInputRef = useRef(null);
@@ -126,9 +125,6 @@ export default function Sidebar({
           </button>
           <button type="button" className="nav-item" onClick={() => fileInputRef.current?.click()}>
             Import data
-          </button>
-          <button type="button" className="nav-item" onClick={onLogout}>
-            Log out
           </button>
         </div>
       </div>

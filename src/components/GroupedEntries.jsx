@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function GroupedEntries({ entries = [], onRemoveEntry, onEditEntry }) {
+export default function GroupedEntries({ entries = [], onRemoveEntry, onEditEntry, onToggleIncluded }) {
   if (!entries || entries.length === 0) {
     return (
       <div className="empty-state">
@@ -12,8 +12,16 @@ export default function GroupedEntries({ entries = [], onRemoveEntry, onEditEntr
   return (
     <div style={{ display: 'grid', gap: 16 }}>
       {entries.map((entry, idx) => (
-        <article key={entry.id || idx} className="entry-card">
+        <article key={entry.id || idx} className={`entry-card${entry.included === false ? ' excluded' : ''}`}>
           <div style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
+              <input
+                type="checkbox"
+                checked={entry.included !== false}
+                onChange={(e) => onToggleIncluded && onToggleIncluded(entry, e.target.checked)}
+                title="Include in dashboard and tracker totals"
+              />
+            </div>
             <div style={{ flex: 1 }}>
               <div className="entry-meta">
                 <span className="entry-type">{entry.type}</span>
