@@ -727,21 +727,21 @@ input::placeholder {
   }
 
   .dashboard {
-    gap: 12px;
-    grid-template-columns: repeat(3, minmax(100px, 1fr));
+    gap: 10px;
+    grid-template-columns: repeat(3, minmax(90px, 1fr));
   }
 
   .card {
-    padding: 14px;
-    min-height: 100px;
+    padding: 12px;
+    min-height: 88px;
   }
 
   .card-label {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
 
   .card h3 {
-    font-size: 1.35rem;
+    font-size: 1.2rem;
   }
 
   .cutoff-tabs {
