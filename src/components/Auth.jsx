@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Simple auth using localStorage. Passwords are hashed with SHA-256 in the browser.
 async function hashPassword(password) {
@@ -15,6 +15,13 @@ export default function Auth({ onLogin }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    const savedUsername = localStorage.getItem("ft_last_user");
+    if (savedUsername) {
+      setUsername(savedUsername);
+    }
+  }, []);
+
   const handleSignup = async (e) => {
     e.preventDefault();
     setError("");
@@ -26,6 +33,7 @@ export default function Auth({ onLogin }) {
 
     users[username] = { passwordHash: hash };
     localStorage.setItem("ft_users", JSON.stringify(users));
+    localStorage.setItem("ft_last_user", username);
 
     // initialize empty data for this user if default exists
     const defaultData = JSON.parse(localStorage.getItem("ft_default_data") || "null");
@@ -46,6 +54,7 @@ export default function Auth({ onLogin }) {
     const user = users[username];
     if (!user || user.passwordHash !== hash) return setError("Invalid credentials");
 
+    localStorage.setItem("ft_last_user", username);
     onLogin(username);
   };
 
