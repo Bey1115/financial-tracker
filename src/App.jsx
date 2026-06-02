@@ -585,7 +585,8 @@ function App() {
 
   const getDefaultCutoffDate = (month, year, cutoff) => {
     const day = cutoff === "secondCutoff" ? 16 : 1;
-    return new Date(`${month} ${day}, ${year}`).toLocaleDateString();
+    const date = new Date(`${month} ${day}, ${year}`);
+    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
   };
 
   const applyTemplate = (templateId) => {
@@ -663,6 +664,18 @@ function App() {
       if (!next.savingsGoals) return previous;
       next.savingsGoals = next.savingsGoals.map((goal) =>
         goal.id === goalId ? { ...goal, completed: false, completedDate: null } : goal
+      );
+      persistUserData(next);
+      return next;
+    });
+  };
+
+  const updateSavingsGoal = (updatedGoal) => {
+    setFinanceData((previous) => {
+      const next = JSON.parse(JSON.stringify(previous));
+      if (!next.savingsGoals) return previous;
+      next.savingsGoals = next.savingsGoals.map((goal) =>
+        goal.id === updatedGoal.id ? { ...goal, ...updatedGoal } : goal
       );
       persistUserData(next);
       return next;
@@ -1051,6 +1064,7 @@ function App() {
             savingsGoals={financeData.savingsGoals || []}
             onCreateGoal={createSavingsGoal}
             onCompleteGoal={completeSavingsGoal}
+            onUpdateGoal={updateSavingsGoal}
             onRemoveEntry={removeEntry}
             onReactivateGoal={reactivateSavingsGoal}
           />

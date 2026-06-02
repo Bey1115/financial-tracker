@@ -5,7 +5,6 @@ export default function Dashboard({ totals, currentMonth, selectedYear }) {
     <>
       <div className="dashboard-header">
         <div>
-          <p className="card-label">Month</p>
           <h2>{currentMonth} {selectedYear}</h2>
         </div>
       </div>

@@ -704,7 +704,6 @@ input::placeholder {
 @media (max-width: 700px) {
   .month,
   .primary-button,
-  .secondary-button,
   .icon-button {
     width: 100%;
   }
@@ -712,6 +711,23 @@ input::placeholder {
   .page-header,
   .tracker-header {
     gap: 16px;
+  }
+
+  .tracker-header {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .tracker-header .secondary-button {
+    width: auto;
+    align-self: flex-start;
+    margin-top: 6px;
+    white-space: nowrap;
+  }
+
+  .tracker-filters {
+    width: 100%;
+    justify-content: flex-start;
   }
 
   .dashboard {

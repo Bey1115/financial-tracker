@@ -1,10 +1,11 @@
 import { useState } from "react";
 
-export default function OverallSavings({ overallSavings = [], savingsGoals = [], onCreateGoal, onCompleteGoal, onRemoveEntry, onReactivateGoal }) {
+export default function OverallSavings({ overallSavings = [], savingsGoals = [], onCreateGoal, onCompleteGoal, onUpdateGoal, onRemoveEntry, onReactivateGoal }) {
   const [goalName, setGoalName] = useState("");
   const [targetAmount, setTargetAmount] = useState("");
   const [targetDate, setTargetDate] = useState("");
   const [expandedGoal, setExpandedGoal] = useState(null);
+  const [editingGoal, setEditingGoal] = useState(null);
 
   const totalSavings = (overallSavings || []).reduce((s, it) => s + Number(it.amount || 0), 0);
 
@@ -95,10 +96,71 @@ export default function OverallSavings({ overallSavings = [], savingsGoals = [],
                     <div style={{ background: '#60a5fa', height: '100%', width: `${progress}%`, transition: 'width 0.3s ease' }} />
                   </div>
 
-                  <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                    <button className="secondary-button" onClick={() => setExpandedGoal(expandedGoal === goal.id ? null : goal.id)}>Toggle details</button>
-                    <button className="secondary-button" onClick={() => handleComplete(goal.id)}>Mark Complete</button>
+                  <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                    <button className="secondary-button" onClick={() => setExpandedGoal(expandedGoal === goal.id ? null : goal.id)} style={{ fontSize: '0.85rem', padding: '8px 12px' }}>Toggle details</button>
+                    <button className="secondary-button" onClick={() => setEditingGoal(editingGoal?.id === goal.id ? null : goal)} style={{ fontSize: '0.85rem', padding: '8px 12px' }}>Edit</button>
+                    <button className="secondary-button" onClick={() => handleComplete(goal.id)} style={{ fontSize: '0.85rem', padding: '8px 12px' }}>Mark Complete</button>
                   </div>
+
+                  {editingGoal?.id === goal.id && (
+                    <div style={{ marginTop: 12, padding: 12, borderRadius: 12, background: 'rgba(255,255,255,0.05)' }}>
+                      <div style={{ display: 'grid', gap: 10 }}>
+                        <label style={{ display: 'grid', gap: 6 }}>
+                          Goal name
+                          <input
+                            type="text"
+                            value={editingGoal.name}
+                            onChange={(e) => setEditingGoal({ ...editingGoal, name: e.target.value })}
+                            style={{ padding: '10px 12px', borderRadius: 10, border: '1px solid rgba(148,163,184,0.3)' }}
+                          />
+                        </label>
+                        <label style={{ display: 'grid', gap: 6 }}>
+                          Target amount
+                          <input
+                            type="number"
+                            min="0"
+                            value={editingGoal.target}
+                            onChange={(e) => setEditingGoal({ ...editingGoal, target: Number(e.target.value) })}
+                            style={{ padding: '10px 12px', borderRadius: 10, border: '1px solid rgba(148,163,184,0.3)' }}
+                          />
+                        </label>
+                        <label style={{ display: 'grid', gap: 6 }}>
+                          Target completion date
+                          <input
+                            type="date"
+                            value={editingGoal.targetDate || ''}
+                            onChange={(e) => setEditingGoal({ ...editingGoal, targetDate: e.target.value })}
+                            style={{ padding: '10px 12px', borderRadius: 10, border: '1px solid rgba(148,163,184,0.3)' }}
+                          />
+                        </label>
+                        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                          <button
+                            type="button"
+                            className="secondary-button"
+                            onClick={() => {
+                              if (!editingGoal.name.trim() || !editingGoal.target) {
+                                alert('Please enter a goal name and target amount.');
+                                return;
+                              }
+                              if (onUpdateGoal) onUpdateGoal(editingGoal);
+                              setEditingGoal(null);
+                            }}
+                            style={{ fontSize: '0.85rem', padding: '8px 12px' }}
+                          >
+                            Save
+                          </button>
+                          <button
+                            type="button"
+                            className="secondary-button"
+                            onClick={() => setEditingGoal(null)}
+                            style={{ fontSize: '0.85rem', padding: '8px 12px' }}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   {expandedGoal === goal.id && (
                     <div style={{ marginTop: 12 }}>
