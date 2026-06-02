@@ -1,0 +1,17 @@
+.fab{
+
+ position:fixed;
+
+ right:25px;
+
+ bottom:25px;
+
+ width:70px;
+
+ height:70px;
+
+ border-radius:50%;
+
+ font-size:32px;
+
+}

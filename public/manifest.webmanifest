@@ -1,0 +1,16 @@
+{
+  "name": "Financial Tracker",
+  "short_name": "Finance",
+  "description": "Personal finance tracker with future planning, templates, and overall savings.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d1321",
+  "theme_color": "#0d1321",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
