@@ -157,6 +157,37 @@ function App() {
     }
   };
 
+  const handleExportData = () => {
+    if (!user) return;
+    const data = localStorage.getItem(`ft_data_${user}`) || JSON.stringify(defaultData);
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `${user}-financial-tracker-data.json`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportData = (text) => {
+    try {
+      const parsed = JSON.parse(text);
+      if (!parsed || typeof parsed !== "object" || !parsed.years) {
+        throw new Error("Invalid data file");
+      }
+      setFinanceData(parsed);
+      persistUserData(parsed);
+      const newYear = Object.keys(parsed.years)[0] || "2026";
+      setSelectedYear(newYear);
+      setCurrentMonth(Object.keys(parsed.years[newYear]?.months || {})[0] || "May");
+      window.alert("Data imported successfully.");
+    } catch (error) {
+      window.alert("Failed to import data. Please use a valid JSON export file.");
+    }
+  };
+
   const addEntry = (entry) => {
     const savedEntry = {
       ...entry,
@@ -766,6 +797,8 @@ function App() {
         overallSavings={financeData.overallSavings || []}
         overallDebts={financeData.overallDebts || []}
         onManageTemplates={() => setIsTemplateModalOpen(true)}
+        onExportData={handleExportData}
+        onImportData={handleImportData}
         onLogout={handleLogout}
         onClose={() => setIsSidebarOpen(false)}
       />

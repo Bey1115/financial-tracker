@@ -1,6 +1,6 @@
 // Sidebar.jsx
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export default function Sidebar({
   isOpen = true,
@@ -19,9 +19,12 @@ export default function Sidebar({
   overallSavings = [],
   overallDebts = [],
   onManageTemplates,
+  onExportData,
+  onImportData,
   onLogout,
   onClose,
 }) {
+  const fileInputRef = useRef(null);
   const [touchStartX, setTouchStartX] = useState(null);
 
   const handleTouchStart = (event) => {
@@ -118,11 +121,30 @@ export default function Sidebar({
           <button type="button" className="nav-item" onClick={onManageTemplates}>
             Manage templates
           </button>
+          <button type="button" className="nav-item" onClick={onExportData}>
+            Export data
+          </button>
+          <button type="button" className="nav-item" onClick={() => fileInputRef.current?.click()}>
+            Import data
+          </button>
           <button type="button" className="nav-item" onClick={onLogout}>
             Log out
           </button>
         </div>
       </div>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="application/json"
+        style={{ display: "none" }}
+        onChange={async (event) => {
+          const file = event.target.files?.[0];
+          if (!file || !onImportData) return;
+          const text = await file.text();
+          onImportData(text);
+          event.target.value = "";
+        }}
+      />
 
       {/* Sidebar summary sections removed as requested */}
     </aside>
