@@ -42,10 +42,11 @@ button {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  transition: transform 0.3s ease, width 0.3s ease, padding 0.3s ease, border-color 0.3s ease;
+  transition: transform 0.3s ease, width 0.3s ease, padding 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
   /* allow sidebar content to scroll if it grows taller than the viewport */
   max-height: 100vh;
   overflow-y: auto;
+  z-index: 40;
 }
 
 .sidebar.hidden {
@@ -54,6 +55,57 @@ button {
   padding: 0;
   border-right-color: transparent;
   overflow: hidden;
+  opacity: 0;
+}
+
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 30;
+}
+
+@media (max-width: 900px) {
+  .sidebar-backdrop {
+    display: block;
+  }
+
+  .sidebar-backdrop.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: min(80vw, 320px);
+    max-width: 320px;
+    padding: 24px 18px;
+    border-right: 1px solid rgba(148, 163, 184, 0.12);
+    transform: translateX(-100%);
+  }
+
+  .sidebar:not(.hidden) {
+    transform: translateX(0);
+  }
+
+  .sidebar.hidden {
+    width: 0;
+    padding: 0;
+    border-right-color: transparent;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+  }
 }
 
 .brand {
@@ -609,6 +661,11 @@ input::placeholder {
     gap: 16px;
   }
 
+  .dashboard {
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+    gap: 16px;
+  }
+
   .entry-grid {
     grid-template-columns: 1fr;
   }
@@ -658,7 +715,7 @@ input::placeholder {
 
   .dashboard {
     gap: 12px;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
   }
 
   .card {

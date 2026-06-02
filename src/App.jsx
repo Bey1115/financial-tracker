@@ -50,6 +50,12 @@ function App() {
   const [currentPage, setCurrentPage] = useState("dashboard"); // dashboard, savings, debts, expenses
   const [editingEntry, setEditingEntry] = useState(null);
 
+  useEffect(() => {
+    if (window.innerWidth < 900) {
+      setIsSidebarOpen(false);
+    }
+  }, []);
+
   if (!localStorage.getItem("ft_default_data")) {
     localStorage.setItem("ft_default_data", JSON.stringify(defaultData));
   }
@@ -759,7 +765,10 @@ function App() {
         onDeleteTemplate={deleteTemplate}
         overallSavings={financeData.overallSavings || []}
         overallDebts={financeData.overallDebts || []}
+        onClose={() => setIsSidebarOpen(false)}
       />
+
+      <div className={`sidebar-backdrop ${isSidebarOpen ? "visible" : ""}`} onClick={() => setIsSidebarOpen(false)} />
 
       <main className="content">
         <header className="page-header">

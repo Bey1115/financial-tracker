@@ -1,5 +1,7 @@
 // Sidebar.jsx
 
+import { useState } from "react";
+
 export default function Sidebar({
   isOpen = true,
   user = "User",
@@ -16,9 +18,35 @@ export default function Sidebar({
   onDeleteTemplate,
   overallSavings = [],
   overallDebts = [],
+  onClose,
 }) {
+  const [touchStartX, setTouchStartX] = useState(null);
+
+  const handleTouchStart = (event) => {
+    setTouchStartX(event.touches[0]?.clientX);
+  };
+
+  const handleTouchMove = (event) => {
+    if (touchStartX == null) return;
+    const currentX = event.touches[0]?.clientX;
+    const diff = currentX - touchStartX;
+    if (diff < -60 && onClose) {
+      onClose();
+      setTouchStartX(null);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setTouchStartX(null);
+  };
+
   return (
-    <aside className={`sidebar ${!isOpen ? 'hidden' : ''}`}>
+    <aside
+      className={`sidebar ${!isOpen ? 'hidden' : ''}`}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       <div className="brand">
       <span className="brand-dot" />
       <div>
