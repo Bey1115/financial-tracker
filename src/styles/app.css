@@ -288,19 +288,20 @@ button {
 
 .dashboard {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  align-items: stretch;
 }
 
-@media (min-width: 900px) {
+@media (max-width: 900px) {
   .dashboard {
-    grid-template-columns: repeat(6, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
 }
 
 .card {
-  min-height: 130px;
-  padding: 24px;
+  min-height: 160px;
+  padding: 28px;
   border-radius: 24px;
   box-shadow: 0 24px 60px rgba(15, 23, 42, 0.2);
   display: flex;
@@ -314,7 +315,7 @@ button {
 }
 
 .card h3 {
-  font-size: 1.7rem;
+  font-size: 2rem;
   margin: 0;
 }
 

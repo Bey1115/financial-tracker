@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function OverallDebts({ overallDebts = [], financeData = {}, activeCutoff, currentMonth, selectedYear, onArchiveCategory, onRestoreCategory }) {
+export default function OverallDebts({ overallDebts = [], financeData = {}, activeCutoff, currentMonth, selectedYear, onArchiveCategory, onRestoreCategory, onAdd, onRemoveEntry }) {
   const [activeTab, setActiveTab] = useState("myDebts"); // myDebts or theirDebts
   const [expanded, setExpanded] = useState({}); // track expanded categories
 
@@ -54,6 +54,60 @@ export default function OverallDebts({ overallDebts = [], financeData = {}, acti
 
   const toggleCategory = (cat) => setExpanded((s) => ({ ...s, [cat]: !s[cat] }));
 
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [addDate, setAddDate] = useState("");
+  const [addAmount, setAddAmount] = useState("");
+  const [addNote, setAddNote] = useState("");
+  const [paymentAmounts, setPaymentAmounts] = useState({}); // track payment amounts by category
+
+  const resetAddForm = () => {
+    setAddDate("");
+    setAddAmount("");
+    setAddNote("");
+  };
+
+  const handlePaymentSubmit = (category) => {
+    const paymentAmount = paymentAmounts[category];
+    if (!paymentAmount || Number(paymentAmount) <= 0) {
+      window.alert("Please enter a payment amount.");
+      return;
+    }
+    const payload = {
+      type: "debts",
+      category: category,
+      amount: Number(paymentAmount),
+      note: `Payment – ${category}`,
+      date: new Date().toISOString().split("T")[0],
+      direction: activeTab === "myDebts" ? "IOwe" : "TheyOwe",
+      debtAction: "Pay",
+    };
+    if (onAdd) onAdd(payload);
+    setPaymentAmounts((s) => {
+      const next = { ...s };
+      delete next[category];
+      return next;
+    });
+  };
+
+  const handleAddDebt = () => {
+    if (!addAmount) {
+      window.alert("Please enter an amount.");
+      return;
+    }
+    const payload = {
+      type: "debts",
+      category: addNote || "Debt",
+      amount: Number(addAmount),
+      note: addNote,
+      date: addDate || undefined,
+      direction: activeTab === "myDebts" ? "IOwe" : "TheyOwe",
+      debtAction: "Borrow",
+    };
+    if (onAdd) onAdd(payload);
+    resetAddForm();
+    setShowAddForm(false);
+  };
+
   return (
     <div style={{ padding: "20px" }}>
       <h1 style={{ marginBottom: 24 }}>Overall Debts</h1>
@@ -72,26 +126,78 @@ export default function OverallDebts({ overallDebts = [], financeData = {}, acti
           className={activeTab === "myDebts" ? "tab-button active" : "tab-button"}
           onClick={() => setActiveTab("myDebts")}
         >
-          My Debts
+          I Owe
         </button>
         <button
           className={activeTab === "theirDebts" ? "tab-button active" : "tab-button"}
           onClick={() => setActiveTab("theirDebts")}
         >
-          Their Debts
+          Owed to Me
         </button>
       </div>
 
       {/* Totals */}
-      {activeTab === "myDebts" ? (
-        <div className="card balance" style={{ marginBottom: 28 }}>
-          <p className="card-label">Total I Owe</p>
-          <h3>₱{myDebtsTotal.toLocaleString()}</h3>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        {activeTab === "myDebts" ? (
+          <div className="card balance" style={{ marginBottom: 28, flex: 1 }}>
+            <p className="card-label">Total I Owe</p>
+            <h3>₱{myDebtsTotal.toLocaleString()}</h3>
+          </div>
+        ) : (
+          <div className="card saving" style={{ marginBottom: 28, flex: 1 }}>
+            <p className="card-label">Total Owed to Me</p>
+            <h3>₱{theirDebtsTotal.toLocaleString()}</h3>
+          </div>
+        )}
+
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <button
+            type="button"
+            className="primary-button"
+            onClick={() => setShowAddForm((s) => !s)}
+            style={{ padding: '10px 14px' }}
+          >
+            + Add
+          </button>
         </div>
-      ) : (
-        <div className="card saving" style={{ marginBottom: 28 }}>
-          <p className="card-label">Total They Owe</p>
-          <h3>₱{theirDebtsTotal.toLocaleString()}</h3>
+      </div>
+
+      {showAddForm && (
+        <div
+          style={{
+            marginTop: 12,
+            marginBottom: 18,
+            padding: 16,
+            borderRadius: 12,
+            background: 'rgba(255,255,255,0.02)',
+            display: 'grid',
+            gap: 12,
+          }}
+        >
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <label>
+              Date
+              <input type="date" value={addDate} onChange={(e) => setAddDate(e.target.value)} />
+            </label>
+            <label>
+              Amount
+              <input type="number" min="0" value={addAmount} onChange={(e) => setAddAmount(e.target.value)} placeholder="0.00" />
+            </label>
+          </div>
+
+          <label>
+            Description
+            <input type="text" value={addNote} onChange={(e) => setAddNote(e.target.value)} placeholder="Optional description" />
+          </label>
+
+          <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+            <button type="button" className="secondary-button" onClick={() => { resetAddForm(); setShowAddForm(false); }}>
+              Cancel
+            </button>
+            <button type="button" className="primary-button" onClick={handleAddDebt}>
+              Add
+            </button>
+          </div>
         </div>
       )}
 
@@ -141,6 +247,50 @@ export default function OverallDebts({ overallDebts = [], financeData = {}, acti
                     >
                       Archive group
                     </button>
+                    <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                      <input
+                        type="number"
+                        min="0"
+                        placeholder="Paid"
+                        value={paymentAmounts[cat] || ""}
+                        onChange={(e) => setPaymentAmounts((s) => ({ ...s, [cat]: e.target.value }))}
+                        onClick={(e) => e.stopPropagation()}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.stopPropagation();
+                            handlePaymentSubmit(cat);
+                          }
+                        }}
+                        style={{
+                          width: 80,
+                          padding: "6px 8px",
+                          borderRadius: 6,
+                          border: "1px solid rgba(148, 163, 184, 0.3)",
+                          background: "rgba(255,255,255,0.05)",
+                          color: "#e2e8f0",
+                          fontSize: "0.9rem",
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handlePaymentSubmit(cat);
+                        }}
+                        style={{
+                          padding: "6px 10px",
+                          borderRadius: 6,
+                          border: "none",
+                          background: "#2563eb",
+                          color: "#f8fafc",
+                          cursor: "pointer",
+                          fontSize: "0.85rem",
+                          fontWeight: 600,
+                        }}
+                      >
+                        ✓
+                      </button>
+                    </div>
                     <div style={{ fontWeight: 800, color: catTotal < 0 ? "#34d399" : "#f87171" }}>
                       {catTotal < 0 ? "-" : ""}₱{Math.abs(catTotal).toLocaleString()}
                     </div>
@@ -152,29 +302,47 @@ export default function OverallDebts({ overallDebts = [], financeData = {}, acti
                   <div style={{ padding: 12, display: "grid", gap: 12 }}>
                     {list.map((debt) => {
                       const amount = signAmount(debt);
+                      const isPaid = debt.debtAction === "Pay";
                       return (
                         <div
                           key={debt.id}
                           style={{
                             padding: 12,
                             borderRadius: 10,
-                            background: "rgba(255,255,255,0.02)",
+                            background: isPaid ? "rgba(52, 211, 153, 0.08)" : "rgba(255,255,255,0.02)",
                             display: "flex",
                             justifyContent: "space-between",
                             alignItems: "center",
+                            borderLeft: isPaid ? "3px solid #34d399" : "none",
                           }}
                         >
                           <div>
                             <div style={{ fontWeight: 700 }}>{debt.note || debt.category || "Debt"}</div>
                             <div style={{ color: "#94a3b8", fontSize: "0.9rem" }}>Date: {debt.date || "-"}</div>
-                            <div style={{ color: "#94a3b8", fontSize: "0.85rem", marginTop: 4 }}>
-                              {debt.debtAction === "Pay" ? "Payment" : "Borrowed"}
-                            </div>
                           </div>
                           <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                            <div style={{ fontWeight: 800, color: amount < 0 ? "#34d399" : "#f87171" }}>
-                              {amount < 0 ? "-" : ""}₱{Math.abs(amount).toLocaleString()}
+                            <div style={{ fontWeight: 800, color: isPaid ? "#34d399" : "#f87171" }}>
+                              {isPaid ? "-" : ""}₱{Math.abs(amount).toLocaleString()}
                             </div>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (onRemoveEntry) onRemoveEntry(debt);
+                              }}
+                              style={{
+                                padding: "6px 10px",
+                                borderRadius: 6,
+                                border: "1px solid rgba(148, 163, 184, 0.3)",
+                                background: "transparent",
+                                color: "#f87171",
+                                cursor: "pointer",
+                                fontSize: "1rem",
+                                fontWeight: 600,
+                              }}
+                              title="Delete"
+                            >
+                              ✕
+                            </button>
                           </div>
                         </div>
                       );
@@ -232,6 +400,72 @@ export default function OverallDebts({ overallDebts = [], financeData = {}, acti
                       >
                         Restore group
                       </button>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          list.forEach((debt) => {
+                            if (onRemoveEntry) onRemoveEntry(debt);
+                          });
+                        }}
+                        style={{
+                          padding: "6px 10px",
+                          borderRadius: 6,
+                          border: "1px solid rgba(148, 163, 184, 0.3)",
+                          background: "transparent",
+                          color: "#f87171",
+                          cursor: "pointer",
+                          fontSize: "1.2rem",
+                          fontWeight: 600,
+                        }}
+                        title="Delete entire group"
+                      >
+                        ✕
+                      </button>
+                      <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                        <input
+                          type="number"
+                          min="0"
+                          placeholder="Paid"
+                          value={paymentAmounts[cat] || ""}
+                          onChange={(e) => setPaymentAmounts((s) => ({ ...s, [cat]: e.target.value }))}
+                          onClick={(e) => e.stopPropagation()}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.stopPropagation();
+                              handlePaymentSubmit(cat);
+                            }
+                          }}
+                          style={{
+                            width: 80,
+                            padding: "6px 8px",
+                            borderRadius: 6,
+                            border: "1px solid rgba(148, 163, 184, 0.3)",
+                            background: "rgba(255,255,255,0.05)",
+                            color: "#e2e8f0",
+                            fontSize: "0.9rem",
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handlePaymentSubmit(cat);
+                          }}
+                          style={{
+                            padding: "6px 10px",
+                            borderRadius: 6,
+                            border: "none",
+                            background: "#2563eb",
+                            color: "#f8fafc",
+                            cursor: "pointer",
+                            fontSize: "0.85rem",
+                            fontWeight: 600,
+                          }}
+                        >
+                          ✓
+                        </button>
+                      </div>
                       <div style={{ fontWeight: 800, color: catTotal < 0 ? "#34d399" : "#f87171" }}>
                         {catTotal < 0 ? "-" : ""}₱{Math.abs(catTotal).toLocaleString()}
                       </div>
@@ -240,27 +474,52 @@ export default function OverallDebts({ overallDebts = [], financeData = {}, acti
                   </div>
                   {isOpen && (
                     <div style={{ padding: 12, display: "grid", gap: 12 }}>
-                      {list.map((debt) => (
-                        <div
-                          key={debt.id}
-                          style={{
-                            padding: 12,
-                            borderRadius: 10,
-                            background: "rgba(255,255,255,0.02)",
-                            display: "grid",
-                            gap: 6,
-                          }}
-                        >
-                          <div style={{ fontWeight: 700 }}>{debt.note || debt.category || "Debt"}</div>
-                          <div style={{ color: "#94a3b8", fontSize: "0.9rem" }}>Date: {debt.date || "-"}</div>
-                          <div style={{ color: "#94a3b8", fontSize: "0.85rem" }}>
-                            {debt.debtAction === "Pay" ? "Payment" : "Borrowed"}
+                      {list.map((debt) => {
+                        const isPaid = debt.debtAction === "Pay";
+                        return (
+                          <div
+                            key={debt.id}
+                            style={{
+                              padding: 12,
+                              borderRadius: 10,
+                              background: isPaid ? "rgba(52, 211, 153, 0.08)" : "rgba(255,255,255,0.02)",
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              borderLeft: isPaid ? "3px solid #34d399" : "none",
+                            }}
+                          >
+                            <div>
+                              <div style={{ fontWeight: 700 }}>{debt.note || debt.category || "Debt"}</div>
+                              <div style={{ color: "#94a3b8", fontSize: "0.9rem" }}>Date: {debt.date || "-"}</div>
+                            </div>
+                            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                              <div style={{ fontWeight: 800, color: isPaid ? "#34d399" : "#f87171" }}>
+                                {isPaid ? "-" : ""}₱{Math.abs(signAmount(debt)).toLocaleString()}
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (onRemoveEntry) onRemoveEntry(debt);
+                                }}
+                                style={{
+                                  padding: "6px 10px",
+                                  borderRadius: 6,
+                                  border: "1px solid rgba(148, 163, 184, 0.3)",
+                                  background: "transparent",
+                                  color: "#f87171",
+                                  cursor: "pointer",
+                                  fontSize: "1rem",
+                                  fontWeight: 600,
+                                }}
+                                title="Delete"
+                              >
+                                ✕
+                              </button>
+                            </div>
                           </div>
-                          <div style={{ fontWeight: 800, color: signAmount(debt) < 0 ? "#34d399" : "#f87171" }}>
-                            {signAmount(debt) < 0 ? "-" : ""}₱{Math.abs(signAmount(debt)).toLocaleString()}
-                          </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </div>

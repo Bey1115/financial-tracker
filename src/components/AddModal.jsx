@@ -17,7 +17,6 @@ export default function AddModal({ isOpen, onClose, onAdd, onUpdate, entryToEdit
     { value: "income", label: "Income" },
     { value: "expenses", label: "Expense" },
     { value: "savings", label: "Savings" },
-    { value: "debts", label: "Debt" },
   ];
 
   const categoryOptions = [...new Set([...(savingsCategoryOptions || []), "Custom"])];

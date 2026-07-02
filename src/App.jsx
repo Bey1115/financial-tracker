@@ -98,9 +98,9 @@ function App() {
   const isEntryIncluded = (entry) => entry.included !== false;
 
   const totals = {
-    income: (cutoffData.income || []).filter((it) => !it.fundFromOverall && isEntryIncluded(it)).reduce((sum, item) => sum + Number(item.amount || 0), 0),
-    expenses: (cutoffData.expenses || []).filter((it) => !it.fundFromOverall && isEntryIncluded(it)).reduce((sum, item) => sum + Number(item.amount || 0), 0),
-    savings: (cutoffData.savings || []).filter((it) => !it.fundFromOverall && isEntryIncluded(it)).reduce((sum, item) => sum + Number(item.amount || 0), 0),
+    income: (cutoffData.income || []).filter((it) => !it.fundFromOverall && !it.transferEntry && isEntryIncluded(it)).reduce((sum, item) => sum + Number(item.amount || 0), 0),
+    expenses: (cutoffData.expenses || []).filter((it) => !it.fundFromOverall && !it.transferEntry && isEntryIncluded(it)).reduce((sum, item) => sum + Number(item.amount || 0), 0),
+    savings: (cutoffData.savings || []).filter((it) => !it.fundFromOverall && !it.transferEntry && isEntryIncluded(it)).reduce((sum, item) => sum + Number(item.amount || 0), 0),
   };
   const overallDebtsArr = financeData.overallDebts || [];
   const currentMonthDebts = overallDebtsArr.filter((debt) => {
@@ -153,7 +153,8 @@ function App() {
           ...item,
           type,
         })),
-      ),
+      )
+      .filter((item) => !item.fundFromOverall && !item.transferEntry),
     ...currentMonthDebts.map((debt) => ({
       ...debt,
       type: debt.debtAction === "Pay" ? "debt payment" : "debts",
@@ -745,6 +746,10 @@ function App() {
         next.overallDebts = next.overallDebts.filter((it) => it.id !== entry.id);
       }
 
+      if (next.overallDebtsArchived) {
+        next.overallDebtsArchived = next.overallDebtsArchived.filter((it) => it.id !== entry.id);
+      }
+
       persistUserData(next);
       return next;
     });
@@ -1067,6 +1072,7 @@ function App() {
             onUpdateGoal={updateSavingsGoal}
             onRemoveEntry={removeEntry}
             onReactivateGoal={reactivateSavingsGoal}
+            onAdd={addEntry}
           />
         )}
 
@@ -1080,6 +1086,8 @@ function App() {
             selectedYear={selectedYear}
             onArchiveCategory={archiveDebtCategory}
             onRestoreCategory={restoreDebtCategory}
+            onAdd={addEntry}
+            onRemoveEntry={removeEntry}
           />
         )}
 
