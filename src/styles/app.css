@@ -324,6 +324,23 @@ button {
   justify-content: space-between;
 }
 
+button.card.filter-card {
+  border: 2px solid transparent;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+button.card.filter-card:hover {
+  transform: translateY(-2px);
+}
+
+button.card.filter-card.active {
+  border-color: rgba(248, 250, 252, 0.85);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.2), 0 0 0 3px rgba(248, 250, 252, 0.2);
+}
+
 .card-label {
   color: rgba(226, 232, 240, 0.78);
   margin-bottom: 10px;
@@ -1505,6 +1522,7 @@ input[type="checkbox"]:hover {
 
   .overview-card {
     background: #ebe4dc;
+    border: 2px solid transparent;
     border-radius: 18px;
     padding: 16px 10px;
     display: flex;
@@ -1512,6 +1530,13 @@ input[type="checkbox"]:hover {
     align-items: center;
     text-align: center;
     gap: 8px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .overview-card.filter-card.active {
+    border-color: #8b6914;
+    box-shadow: 0 0 0 1px rgba(139, 105, 20, 0.15);
   }
 
   .overview-icon {

@@ -1015,9 +1015,11 @@ function App() {
           <>
             <Dashboard
               totals={totals}
-              totalBalance={overallSavingsTotal}
               currentMonth={currentMonth}
               selectedYear={selectedYear}
+              activeCutoffLabel={cutoffLabels[activeCutoff]}
+              entryFilter={entryFilter}
+              onFilterChange={setEntryFilter}
             />
 
             <div className="cutoff-tabs desktop-only">

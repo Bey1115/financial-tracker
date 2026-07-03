@@ -4,7 +4,18 @@ const formatMoney = (value) =>
     maximumFractionDigits: 2,
   });
 
-export default function Dashboard({ totals, totalBalance, currentMonth, selectedYear }) {
+const toggleFilter = (current, value, onFilterChange) => {
+  onFilterChange(current === value ? "all" : value);
+};
+
+export default function Dashboard({
+  totals,
+  currentMonth,
+  selectedYear,
+  activeCutoffLabel,
+  entryFilter,
+  onFilterChange,
+}) {
   return (
     <>
       <div className="dashboard-header desktop-only">
@@ -23,15 +34,21 @@ export default function Dashboard({ totals, totalBalance, currentMonth, selected
         </div>
         <div className="mobile-balance-content">
           <p className="mobile-balance-label">Total balance</p>
-          <h2 className="mobile-balance-amount">₱{formatMoney(totalBalance)}</h2>
-          <p className="mobile-balance-sub">All accounts</p>
+          <h2 className="mobile-balance-amount">₱{formatMoney(totals.balance)}</h2>
+          <p className="mobile-balance-sub">
+            {activeCutoffLabel} · {currentMonth} {selectedYear}
+          </p>
         </div>
       </div>
 
       <section className="overview-section mobile-only">
         <h3 className="overview-title">Overview</h3>
         <div className="overview-grid">
-          <div className="overview-card">
+          <button
+            type="button"
+            className={`overview-card filter-card${entryFilter === "income" ? " active" : ""}`}
+            onClick={() => toggleFilter(entryFilter, "income", onFilterChange)}
+          >
             <div className="overview-icon income-icon" aria-hidden="true">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M12 19V5M5 12l7-7 7 7" />
@@ -39,8 +56,12 @@ export default function Dashboard({ totals, totalBalance, currentMonth, selected
             </div>
             <p className="overview-label">Income</p>
             <p className="overview-value income-text">₱{formatMoney(totals.income)}</p>
-          </div>
-          <div className="overview-card">
+          </button>
+          <button
+            type="button"
+            className={`overview-card filter-card${entryFilter === "expenses" ? " active" : ""}`}
+            onClick={() => toggleFilter(entryFilter, "expenses", onFilterChange)}
+          >
             <div className="overview-icon expense-icon" aria-hidden="true">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M12 5v14M19 12l-7 7-7-7" />
@@ -48,8 +69,12 @@ export default function Dashboard({ totals, totalBalance, currentMonth, selected
             </div>
             <p className="overview-label">Expenses</p>
             <p className="overview-value expense-text">₱{formatMoney(totals.expenses)}</p>
-          </div>
-          <div className="overview-card">
+          </button>
+          <button
+            type="button"
+            className={`overview-card filter-card${entryFilter === "savings" ? " active" : ""}`}
+            onClick={() => toggleFilter(entryFilter, "savings", onFilterChange)}
+          >
             <div className="overview-icon savings-icon" aria-hidden="true">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M19 11c0 4.418-3.582 8-8 8S3 15.418 3 11s3.582-8 8-8 8 3.582 8 8z" />
@@ -58,25 +83,37 @@ export default function Dashboard({ totals, totalBalance, currentMonth, selected
             </div>
             <p className="overview-label">Savings</p>
             <p className="overview-value savings-text">₱{formatMoney(totals.savings)}</p>
-          </div>
+          </button>
         </div>
       </section>
 
       <div className="dashboard desktop-only">
-        <div className="card income">
+        <button
+          type="button"
+          className={`card income filter-card${entryFilter === "income" ? " active" : ""}`}
+          onClick={() => toggleFilter(entryFilter, "income", onFilterChange)}
+        >
           <p className="card-label">Income</p>
           <h3>₱{totals.income.toLocaleString()}</h3>
-        </div>
+        </button>
 
-        <div className="card expense">
+        <button
+          type="button"
+          className={`card expense filter-card${entryFilter === "expenses" ? " active" : ""}`}
+          onClick={() => toggleFilter(entryFilter, "expenses", onFilterChange)}
+        >
           <p className="card-label">Expenses</p>
           <h3>₱{totals.expenses.toLocaleString()}</h3>
-        </div>
+        </button>
 
-        <div className="card saving">
+        <button
+          type="button"
+          className={`card saving filter-card${entryFilter === "savings" ? " active" : ""}`}
+          onClick={() => toggleFilter(entryFilter, "savings", onFilterChange)}
+        >
           <p className="card-label">Savings</p>
           <h3>₱{totals.savings.toLocaleString()}</h3>
-        </div>
+        </button>
 
         <div className="card balance">
           <p className="card-label">Balance</p>
