@@ -1856,6 +1856,46 @@ input[type="checkbox"]:hover {
   .modal-backdrop {
     background: rgba(61, 52, 41, 0.5);
   }
+
+  /* Overall Savings page mobile theme matching dashboard */
+  .mobile-balance-card.card.saving {
+    background: linear-gradient(180deg, #2563eb, #60a5fa);
+    border: none;
+    box-shadow: 0 18px 32px rgba(34, 211, 238, 0.18);
+    padding: 20px 22px;
+    margin-bottom: 20px;
+  }
+
+  .mobile-balance-card.card.saving .mobile-balance-icon {
+    background: rgba(255, 255, 255, 0.2);
+    color: #f8fafc;
+  }
+
+  .mobile-balance-card.card.saving .mobile-balance-label {
+    color: rgba(226, 232, 240, 0.78);
+  }
+
+  .mobile-balance-card.card.saving .mobile-balance-amount {
+    color: #f8fafc;
+  }
+
+  .goal-card {
+    background: #ebe4dc;
+    border: none;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: none;
+  }
+
+  .goal-card .goal-action-button {
+    background: #d9cfc3;
+    color: #6b6156;
+    border: none;
+  }
+
+  .goal-card .goal-action-button:hover {
+    background: #c9bfb3;
+  }
 }
 
 @media (max-width: 500px) {

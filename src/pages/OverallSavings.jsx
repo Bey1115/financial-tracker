@@ -142,17 +142,29 @@ export default function OverallSavings({ overallSavings = [], savingsGoals = [],
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1 style={{ marginBottom: 24 }}>Overall Savings</h1>
+      <div className="mobile-balance-card mobile-only card saving" style={{ marginBottom: 28 }}>
+        <div className="mobile-balance-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M19 11c0 4.418-3.582 8-8 8S3 15.418 3 11s3.582-8 8-8 8 3.582 8 8z" />
+            <path d="M12 7v8M9 10h6" />
+          </svg>
+        </div>
+        <div className="mobile-balance-content">
+          <p className="mobile-balance-label">Overall Savings</p>
+          <h2 className="mobile-balance-amount">₱{Number(totalSavings).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h2>
+        </div>
+      </div>
 
-      <div className="card saving" style={{ marginBottom: 28 }}>
+      <div className="card saving desktop-only" style={{ marginBottom: 28 }}>
         <p className="card-label">Overall Savings</p>
         <h3>₱{Number(totalSavings).toLocaleString()}</h3>
       </div>
 
-      {/* Active Goal */}
+      {/* Active Goals Section */}
       {activeGoals.length > 0 && (
         <div style={{ marginBottom: 28 }}>
-          <h2 style={{ marginBottom: 12 }}>Active Goal</h2>
+          <h2 className="mobile-section-header mobile-only" style={{ marginBottom: 12 }}>Active Goals</h2>
+          <h2 className="desktop-only" style={{ marginBottom: 12 }}>Active Goal</h2>
           <div style={{ display: 'grid', gap: 12 }}>
             {activeGoals.map((goal) => {
               const normalize = (value) => String(value || "").toLowerCase().trim();
@@ -175,16 +187,16 @@ export default function OverallSavings({ overallSavings = [], savingsGoals = [],
               const progress = Math.min((actual / goal.target) * 100, 100);
               const days = daysUntil(goal.targetDate);
               return (
-                <div key={goal.id} style={{ padding: 16, borderRadius: 12, background: 'rgba(56,189,248,0.06)' }}>
+                <div key={goal.id} className="goal-card mobile-only" style={{ padding: 16, borderRadius: 12, background: 'rgba(56,189,248,0.06)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                     <div>
                       <div style={{ fontWeight: 700 }}>{goal.name}</div>
                       <div style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Target: ₱{Number(goal.target).toLocaleString()}</div>
                     </div>
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontWeight: 700 }}>₱{Number(actual).toLocaleString()} / ₱{Number(goal.target).toLocaleString()}</div>
-                      <div style={{ color: '#94a3b8' }}>
-                        {goal.targetDate ? `${goal.targetDate}${days !== null ? ` • ${days} days` : ''}` : ''}
+                      <div style={{ fontWeight: 700 }}>₱{Number(actual).toLocaleString()}</div>
+                      <div style={{ color: '#94a3b8', fontSize: '0.85rem' }}>
+                        {goal.targetDate && days !== null ? `${days} days` : ''}
                       </div>
                     </div>
                   </div>
