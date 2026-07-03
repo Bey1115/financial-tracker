@@ -1856,6 +1856,138 @@ input[type="checkbox"]:hover {
   .modal-backdrop {
     background: rgba(61, 52, 41, 0.5);
   }
+
+  /* Overall Savings page mobile styles */
+  .overall-savings-page {
+    padding: 0;
+  }
+
+  .mobile-balance-card {
+    background: #ebe4dc;
+    border: none;
+    box-shadow: none;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+  }
+
+  .mobile-balance-content {
+    flex: 1;
+  }
+
+  .mobile-balance-label {
+    font-size: 0.82rem;
+    color: #8a7f72;
+    margin-bottom: 4px;
+  }
+
+  .mobile-balance-amount {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #3d3429;
+    margin: 0;
+    line-height: 1.15;
+  }
+
+  .active-goals-section {
+    margin-bottom: 20px;
+  }
+
+  .mobile-section-header {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #3d3429;
+    margin: 0 0 14px;
+  }
+
+  .goals-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .goal-card {
+    background: #ebe4dc;
+    border: none;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: none;
+  }
+
+  .goal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .goal-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .goal-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #3d3429;
+    margin-bottom: 2px;
+  }
+
+  .goal-target {
+    font-size: 0.78rem;
+    color: #8a7f72;
+  }
+
+  .goal-amounts {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .goal-current {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #3d3429;
+  }
+
+  .goal-days {
+    font-size: 0.75rem;
+    color: #8a7f72;
+  }
+
+  .goal-progress-container {
+    background: #d9cfc3;
+    height: 8px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .goal-progress-bar {
+    background: #8b6914;
+    height: 100%;
+    transition: width 0.3s ease;
+  }
+
+  .goal-action-row {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+
+  .goal-action-button {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    padding: 0;
+    border-radius: 10px;
+    background: #d9cfc3;
+    color: #6b6156;
+    font-size: 1rem;
+    border: none;
+  }
+
+  .goal-action-button:hover {
+    background: #c9bfb3;
+  }
 }
 
 @media (max-width: 500px) {

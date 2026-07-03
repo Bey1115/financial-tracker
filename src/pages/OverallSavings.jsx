@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function OverallSavings({ overallSavings = [], savingsGoals = [], onCreateGoal, onCompleteGoal, onUpdateGoal, onRemoveEntry, onReactivateGoal, onAdd }) {
+export default function OverallSavings({ overallSavings = [], savingsGoals = [], onCreateGoal, onCompleteGoal, onUpdateGoal, onRemoveEntry, onReactivateGoal, onAdd, setIsSidebarOpen }) {
   const [goalName, setGoalName] = useState("");
   const [targetAmount, setTargetAmount] = useState("");
   const [targetDate, setTargetDate] = useState("");
@@ -141,19 +141,38 @@ export default function OverallSavings({ overallSavings = [], savingsGoals = [],
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1 style={{ marginBottom: 24 }}>Overall Savings</h1>
-
-      <div className="card saving" style={{ marginBottom: 28 }}>
-        <p className="card-label">Overall Savings</p>
-        <h3>₱{Number(totalSavings).toLocaleString()}</h3>
+    <div className="overall-savings-page">
+      {/* Mobile Header */}
+      <div className="mobile-only">
+        <div className="mobile-header-top">
+          <button className="mobile-menu-btn" onClick={() => setIsSidebarOpen && setIsSidebarOpen(true)}>
+            ☰
+          </button>
+          <h1 className="mobile-page-title">Financial Tracker</h1>
+        </div>
       </div>
 
-      {/* Active Goal */}
+      {/* Desktop Header */}
+      <div className="desktop-only">
+        <h1 style={{ marginBottom: 24 }}>Overall Savings</h1>
+      </div>
+
+      {/* Overall Savings Card */}
+      <div className="card saving mobile-balance-card" style={{ marginBottom: 28 }}>
+        <div className="mobile-balance-icon">
+          💰
+        </div>
+        <div className="mobile-balance-content">
+          <p className="mobile-balance-label">Overall Savings</p>
+          <h3 className="mobile-balance-amount">₱{Number(totalSavings).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
+        </div>
+      </div>
+
+      {/* Active Goals Section */}
       {activeGoals.length > 0 && (
-        <div style={{ marginBottom: 28 }}>
-          <h2 style={{ marginBottom: 12 }}>Active Goal</h2>
-          <div style={{ display: 'grid', gap: 12 }}>
+        <div className="active-goals-section" style={{ marginBottom: 28 }}>
+          <h2 className="mobile-section-header" style={{ marginBottom: 12 }}>Active Goals</h2>
+          <div className="goals-list" style={{ display: 'grid', gap: 12 }}>
             {activeGoals.map((goal) => {
               const normalize = (value) => String(value || "").toLowerCase().trim();
               const goalKey = normalize(goal.name);
@@ -175,22 +194,22 @@ export default function OverallSavings({ overallSavings = [], savingsGoals = [],
               const progress = Math.min((actual / goal.target) * 100, 100);
               const days = daysUntil(goal.targetDate);
               return (
-                <div key={goal.id} style={{ padding: 16, borderRadius: 12, background: 'rgba(56,189,248,0.06)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                    <div>
-                      <div style={{ fontWeight: 700 }}>{goal.name}</div>
-                      <div style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Target: ₱{Number(goal.target).toLocaleString()}</div>
+                <div key={goal.id} className="goal-card" style={{ padding: 16, borderRadius: 12, background: 'rgba(56,189,248,0.06)' }}>
+                  <div className="goal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                    <div className="goal-info">
+                      <div className="goal-name" style={{ fontWeight: 700 }}>{goal.name}</div>
+                      <div className="goal-target" style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Target: ₱{Number(goal.target).toLocaleString()}</div>
                     </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontWeight: 700 }}>₱{Number(actual).toLocaleString()} / ₱{Number(goal.target).toLocaleString()}</div>
-                      <div style={{ color: '#94a3b8' }}>
-                        {goal.targetDate ? `${goal.targetDate}${days !== null ? ` • ${days} days` : ''}` : ''}
+                    <div className="goal-amounts" style={{ textAlign: 'right' }}>
+                      <div className="goal-current" style={{ fontWeight: 700 }}>₱{Number(actual).toLocaleString()}</div>
+                      <div className="goal-days" style={{ color: '#94a3b8', fontSize: '0.85rem' }}>
+                        {goal.targetDate && days !== null ? `${days} days` : ''}
                       </div>
                     </div>
                   </div>
 
-                  <div style={{ background: 'rgba(255,255,255,0.1)', height: 10, borderRadius: 8, overflow: 'hidden', marginBottom: 8 }}>
-                    <div style={{ background: '#60a5fa', height: '100%', width: `${progress}%`, transition: 'width 0.3s ease' }} />
+                  <div className="goal-progress-container" style={{ background: 'rgba(255,255,255,0.1)', height: 10, borderRadius: 8, overflow: 'hidden', marginBottom: 8 }}>
+                    <div className="goal-progress-bar" style={{ background: '#60a5fa', height: '100%', width: `${progress}%`, transition: 'width 0.3s ease' }} />
                   </div>
 
                   <div className="goal-action-row">
@@ -203,17 +222,17 @@ export default function OverallSavings({ overallSavings = [], savingsGoals = [],
                     </button>
                     <button
                       className="secondary-button goal-action-button"
-                      onClick={() => setEditingGoal(editingGoal?.id === goal.id ? null : goal)}
-                      title="Edit"
+                      onClick={() => setTransferringGoal(transferringGoal === goal.id ? null : goal.id)}
+                      title="Transfer funds"
                     >
-                      ✎
+                      ↗
                     </button>
                     <button
                       className="secondary-button goal-action-button"
                       onClick={() => setTransferringGoal(transferringGoal === goal.id ? null : goal.id)}
                       title="Transfer funds"
                     >
-                      ↗️
+                      ↘
                     </button>
                     <button
                       className="secondary-button goal-action-button"
