@@ -1092,7 +1092,6 @@ function App() {
             onRemoveEntry={removeEntry}
             onReactivateGoal={reactivateSavingsGoal}
             onAdd={addEntry}
-            setIsSidebarOpen={setIsSidebarOpen}
           />
         )}
 
