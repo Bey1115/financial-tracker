@@ -206,7 +206,7 @@ export default function OverallSavings({ overallSavings = [], savingsGoals = [],
                       onClick={() => setEditingGoal(editingGoal?.id === goal.id ? null : goal)}
                       title="Edit"
                     >
-                      ✏️
+                      ✎
                     </button>
                     <button
                       className="secondary-button goal-action-button"
