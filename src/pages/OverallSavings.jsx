@@ -193,36 +193,32 @@ export default function OverallSavings({ overallSavings = [], savingsGoals = [],
                     <div style={{ background: '#60a5fa', height: '100%', width: `${progress}%`, transition: 'width 0.3s ease' }} />
                   </div>
 
-                  <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', flexWrap: 'wrap', alignItems: 'center' }}>
+                  <div className="goal-action-row">
                     <button
-                      className="secondary-button"
+                      className="secondary-button goal-action-button"
                       onClick={() => setExpandedGoal(expandedGoal === goal.id ? null : goal.id)}
                       title="Toggle details"
-                      style={{ fontSize: '1.1rem', padding: '6px 10px', minWidth: 'auto' }}
                     >
                       ⋮
                     </button>
                     <button
-                      className="secondary-button"
+                      className="secondary-button goal-action-button"
                       onClick={() => setEditingGoal(editingGoal?.id === goal.id ? null : goal)}
                       title="Edit"
-                      style={{ fontSize: '1.1rem', padding: '6px 10px', minWidth: 'auto' }}
                     >
                       ✏️
                     </button>
                     <button
-                      className="secondary-button"
+                      className="secondary-button goal-action-button"
                       onClick={() => setTransferringGoal(transferringGoal === goal.id ? null : goal.id)}
                       title="Transfer funds"
-                      style={{ fontSize: '1.1rem', padding: '6px 10px', minWidth: 'auto' }}
                     >
                       ↗️
                     </button>
                     <button
-                      className="secondary-button"
+                      className="secondary-button goal-action-button"
                       onClick={() => handleComplete(goal.id)}
                       title="Mark Complete"
-                      style={{ fontSize: '1.1rem', padding: '6px 10px', minWidth: 'auto' }}
                     >
                       ✓
                     </button>

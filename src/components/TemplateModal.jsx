@@ -6,8 +6,6 @@ export default function TemplateModal({ isOpen, onClose, templates = [], onSaveT
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
-  const [direction, setDirection] = useState("IOwe");
-  const [debtAction, setDebtAction] = useState("Borrow");
   const [entries, setEntries] = useState([]);
   const [editingTemplateId, setEditingTemplateId] = useState(null);
 
@@ -18,8 +16,6 @@ export default function TemplateModal({ isOpen, onClose, templates = [], onSaveT
       setCategory("");
       setAmount("");
       setNote("");
-      setDirection("IOwe");
-      setDebtAction("Borrow");
       setEntries([]);
       setEditingTemplateId(null);
     }
@@ -38,8 +34,6 @@ export default function TemplateModal({ isOpen, onClose, templates = [], onSaveT
         category,
         amount: Number(amount),
         note,
-        direction: itemType === "debts" ? direction : undefined,
-        debtAction: itemType === "debts" ? debtAction : undefined,
       },
     ]);
     setCategory("");
@@ -105,7 +99,6 @@ export default function TemplateModal({ isOpen, onClose, templates = [], onSaveT
                   { value: "income", label: "Income" },
                   { value: "expenses", label: "Expense" },
                   { value: "savings", label: "Savings" },
-                  { value: "debts", label: "Debt" },
                 ].map((option) => (
                   <button
                     key={option.value}
@@ -151,35 +144,6 @@ export default function TemplateModal({ isOpen, onClose, templates = [], onSaveT
             />
           </label>
 
-          {itemType === "debts" && (
-            <div className="form-row">
-              <label>
-                Debt direction
-                <select value={direction} onChange={(event) => setDirection(event.target.value)}>
-                  <option value="IOwe">I owe it to others</option>
-                  <option value="TheyOwe">Others owe it to me</option>
-                </select>
-              </label>
-              <label>
-                Debt action
-                <div className="type-select">
-                  {[
-                    { value: "Borrow", label: "Borrow" },
-                    { value: "Pay", label: "Pay" },
-                  ].map((option) => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      className={option.value === debtAction ? "type-chip active" : "type-chip"}
-                      onClick={() => setDebtAction(option.value)}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-              </label>
-            </div>
-          )}
 
           <div className="form-actions" style={{ justifyContent: "flex-start" }}>
             <button type="button" className="secondary-button" onClick={handleAddTemplateItem}>
@@ -196,11 +160,6 @@ export default function TemplateModal({ isOpen, onClose, templates = [], onSaveT
                   </div>
                   <div className="entry-title">{entry.category}</div>
                   <div className="entry-note">{entry.note || "No note"}</div>
-                  {entry.type === "debts" && (
-                    <div style={{ color: "#94a3b8", fontSize: "0.9rem" }}>
-                      {entry.direction} • {entry.debtAction}
-                    </div>
-                  )}
                   <div className={`entry-amount ${entry.type === "expenses" ? "negative" : "positive"}`}>
                     ₱{Number(entry.amount).toLocaleString()}
                   </div>

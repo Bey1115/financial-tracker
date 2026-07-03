@@ -55,7 +55,6 @@ function App() {
     { label: "Income", value: "income" },
     { label: "Expenses", value: "expenses" },
     { label: "Savings", value: "savings" },
-    { label: "Debts", value: "debts" },
   ];
 
   useEffect(() => {
@@ -133,21 +132,13 @@ function App() {
     }
     return sum;
   }, 0);
-  const cutoffDebtAdjustment = activeMonthDebts.reduce((sum, it) => {
-    const amount = Number(it.amount || 0);
-    if (it.direction === "IOwe" && it.debtAction === "Borrow") return sum + amount;
-    if (it.direction === "IOwe" && it.debtAction === "Pay") return sum - amount;
-    if (it.direction === "TheyOwe" && it.debtAction === "Borrow") return sum - amount;
-    if (it.direction === "TheyOwe" && it.debtAction === "Pay") return sum + amount;
-    return sum;
-  }, 0);
 
   totals.myDebts = cutoffMyDebtsTotal;
   totals.othersDebts = cutoffOthersDebtsTotal;
-  totals.balance = totals.income + cutoffDebtAdjustment - totals.expenses - totals.savings;
-
+  totals.balance = totals.income - totals.expenses - totals.savings;
   const recentEntries = [
     ...Object.entries(cutoffData)
+      .filter(([type]) => type !== "debts")
       .flatMap(([type, items]) =>
         items.map((item) => ({
           ...item,
@@ -155,20 +146,11 @@ function App() {
         })),
       )
       .filter((item) => !item.fundFromOverall && !item.transferEntry),
-    ...currentMonthDebts.map((debt) => ({
-      ...debt,
-      type: debt.debtAction === "Pay" ? "debt payment" : "debts",
-      amount: debt.debtAction === "Pay" ? -Math.abs(Number(debt.amount || 0)) : Number(debt.amount || 0),
-      note: debt.debtAction === "Pay" ? `Payment – ${debt.note || "Debt payment"}` : debt.note,
-    })),
   ].sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
   const filteredEntries = recentEntries.filter((entry) => {
     if (entryFilter === "all") return true;
     const normalizedType = String(entry.type || "").toLowerCase();
-    if (entryFilter === "debts") {
-      return normalizedType.includes("debt");
-    }
     if (entryFilter === "savings") {
       return normalizedType.includes("saving");
     }
