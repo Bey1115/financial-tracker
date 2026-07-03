@@ -18,6 +18,13 @@ const cutoffLabels = {
   secondCutoff: "Second Cut-Off",
 };
 
+const pageTitles = {
+  dashboard: "Dashboard",
+  savings: "Savings",
+  debts: "Debts",
+  expenses: "Expenses",
+};
+
 const createEmptyMonth = () => JSON.parse(JSON.stringify(defaultData.years[2026].months.May));
 
 function App() {
@@ -160,7 +167,6 @@ function App() {
   const currentCutoffEntries = recentEntries;
   const allCurrentCutoffSelected = currentCutoffEntries.length > 0 && currentCutoffEntries.every(isEntryIncluded);
 
-  const activeEntries = recentEntries.filter(isEntryIncluded);
   const visibleOverallSavings = (financeData.overallSavings || []).filter(isEntryIncluded);
   const visibleOverallDebts = overallDebtsArr.filter(isEntryIncluded);
 
@@ -935,14 +941,23 @@ function App() {
 
       <main className="content">
         <header className="page-header">
-          <div>
+          <div className="mobile-header-top mobile-only">
+            <button className="mobile-menu-btn" title="Toggle sidebar" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <h1 className="mobile-page-title">{pageTitles[currentPage]}</h1>
+          </div>
+
+          <div className="desktop-header desktop-only">
             <button className="icon-button" title="Toggle sidebar" onClick={() => setIsSidebarOpen(!isSidebarOpen)} style={{ marginRight: 12 }}>
               ☰
             </button>
             <h1>Financial Tracker</h1>
           </div>
 
-          <div className="header-actions">
+          <div className="header-actions desktop-only">
             <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
               {currentPage === 'dashboard' && (
                 <>
@@ -998,14 +1013,34 @@ function App() {
         {/* Dashboard Page */}
         {currentPage === 'dashboard' && (
           <>
-            <Dashboard totals={totals} currentMonth={currentMonth} selectedYear={selectedYear} />
+            <Dashboard
+              totals={totals}
+              totalBalance={overallSavingsTotal}
+              currentMonth={currentMonth}
+              selectedYear={selectedYear}
+            />
 
-            <div className="cutoff-tabs">
+            <div className="cutoff-tabs desktop-only">
+              <CutoffTabs activeCutoff={activeCutoff} setActiveCutoff={setActiveCutoff} />
+            </div>
+
+            <div className="mobile-cutoff-tabs mobile-only">
               <CutoffTabs activeCutoff={activeCutoff} setActiveCutoff={setActiveCutoff} />
             </div>
 
             <section className="tracker-panel">
-              <div className="tracker-header">
+              <div className="mobile-section-header mobile-only">
+                <h2>Recent transactions</h2>
+                <button
+                  type="button"
+                  className="view-all-link"
+                  onClick={() => setEntryFilter("all")}
+                >
+                  View all
+                </button>
+              </div>
+
+              <div className="tracker-header desktop-only">
                 <div className="tracker-filters">
                   {filterTypes.map((filter) => (
                     <button
@@ -1075,7 +1110,7 @@ function App() {
 
         {/* Expenses Page */}
         {currentPage === 'expenses' && (
-          <ExpensesStatistics entries={activeEntries} currentMonth={currentMonth} />
+          <ExpensesStatistics financeData={financeData} selectedYear={selectedYear} currentMonth={currentMonth} />
         )}
       </main>
 
@@ -1102,6 +1137,69 @@ function App() {
         selectedYear={selectedYear}
         savingsCategoryOptions={savingsCategoryOptions}
       />
+
+      <nav className="mobile-bottom-nav mobile-only" aria-label="Main navigation">
+        <button
+          type="button"
+          className={`mobile-nav-item${currentPage === "dashboard" ? " active" : ""}`}
+          onClick={() => setCurrentPage("dashboard")}
+        >
+          <span className="mobile-nav-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              <path d="M9 22V12h6v10" />
+            </svg>
+          </span>
+          <span className="mobile-nav-label">Dashboard</span>
+        </button>
+        <button
+          type="button"
+          className={`mobile-nav-item${currentPage === "savings" ? " active" : ""}`}
+          onClick={() => setCurrentPage("savings")}
+        >
+          <span className="mobile-nav-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M19 11c0 4.418-3.582 8-8 8S3 15.418 3 11s3.582-8 8-8 8 3.582 8 8z" />
+              <path d="M12 7v8M9 10h6" />
+            </svg>
+          </span>
+          <span className="mobile-nav-label">Savings</span>
+        </button>
+        <button
+          type="button"
+          className={`mobile-nav-item${currentPage === "expenses" ? " active" : ""}`}
+          onClick={() => setCurrentPage("expenses")}
+        >
+          <span className="mobile-nav-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+              <path d="M22 12A10 10 0 0 0 12 2v10z" />
+            </svg>
+          </span>
+          <span className="mobile-nav-label">Expenses</span>
+        </button>
+        <button
+          type="button"
+          className={`mobile-nav-item${currentPage === "debts" ? " active" : ""}`}
+          onClick={() => setCurrentPage("debts")}
+        >
+          <span className="mobile-nav-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <rect x="4" y="2" width="16" height="20" rx="2" />
+              <path d="M8 6h8M8 10h8M8 14h4" />
+            </svg>
+          </span>
+          <span className="mobile-nav-label">Debts</span>
+        </button>
+        <button type="button" className="mobile-nav-item mobile-nav-add" onClick={() => setIsModalOpen(true)}>
+          <span className="mobile-nav-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </span>
+          <span className="mobile-nav-label">Add Entry</span>
+        </button>
+      </nav>
     </div>
   );
 }
