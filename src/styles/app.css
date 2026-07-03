@@ -1103,3 +1103,137 @@ input[type="checkbox"] {
 input[type="checkbox"]:hover {
   opacity: 0.8;
 }
+
+.debt-total-row {
+  margin-bottom: 28px;
+}
+
+.debt-add-button {
+  white-space: nowrap;
+}
+
+.debt-group-actions {
+  min-width: 0;
+}
+
+.debt-entry-actions {
+  min-width: 0;
+}
+
+.debt-payment-control {
+  min-width: 0;
+}
+
+.debt-payment-input {
+  min-width: 0;
+}
+
+.debt-group-total {
+  white-space: nowrap;
+}
+
+@media (max-width: 500px) {
+  .overall-debts-page {
+    padding: 12px !important;
+  }
+
+  .debt-total-row {
+    gap: 10px !important;
+    margin-bottom: 22px;
+  }
+
+  .debt-total-row .card {
+    min-height: 104px;
+    margin-bottom: 0 !important;
+    padding: 16px;
+  }
+
+  .debt-add-button {
+    width: auto;
+    min-width: 74px;
+    padding: 10px 12px !important;
+    border-radius: 14px;
+    font-size: 0.9rem;
+  }
+
+  .debt-category-header {
+    display: grid !important;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 14px !important;
+    align-items: stretch !important;
+  }
+
+  .debt-group-actions {
+    width: 100%;
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px !important;
+    align-items: center !important;
+  }
+
+  .debt-group-button {
+    width: auto;
+    min-width: 0;
+    padding: 9px 10px !important;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    line-height: 1.1;
+  }
+
+  .debt-payment-control {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 32px;
+    flex: 1 1 112px;
+    max-width: 150px;
+    gap: 6px !important;
+  }
+
+  .debt-group-actions > button:not(.debt-group-button) {
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 !important;
+    border-radius: 10px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .debt-payment-input {
+    width: 100% !important;
+    padding: 8px 8px !important;
+    border-radius: 10px !important;
+    font-size: 0.85rem !important;
+  }
+
+  .debt-payment-control button {
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 !important;
+    border-radius: 10px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .debt-group-total {
+    margin-left: auto;
+    font-size: 0.86rem;
+  }
+
+  .debt-chevron {
+    display: none;
+  }
+
+  .debt-entry-actions {
+    justify-content: flex-end;
+    gap: 8px !important;
+  }
+
+  .debt-entry-actions button {
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 !important;
+    border-radius: 10px !important;
+  }
+}

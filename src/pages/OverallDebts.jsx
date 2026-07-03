@@ -109,7 +109,7 @@ export default function OverallDebts({ overallDebts = [], financeData = {}, acti
   };
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="overall-debts-page" style={{ padding: "20px" }}>
       <h1 style={{ marginBottom: 24 }}>Overall Debts</h1>
 
       {/* Tabs */}
@@ -137,7 +137,7 @@ export default function OverallDebts({ overallDebts = [], financeData = {}, acti
       </div>
 
       {/* Totals */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <div className="debt-total-row" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         {activeTab === "myDebts" ? (
           <div className="card balance" style={{ marginBottom: 28, flex: 1 }}>
             <p className="card-label">Total I Owe</p>
@@ -153,7 +153,7 @@ export default function OverallDebts({ overallDebts = [], financeData = {}, acti
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <button
             type="button"
-            className="primary-button"
+            className="primary-button debt-add-button"
             onClick={() => setShowAddForm((s) => !s)}
             style={{ padding: '10px 14px' }}
           >
@@ -223,6 +223,7 @@ export default function OverallDebts({ overallDebts = [], financeData = {}, acti
             return (
               <div key={cat} style={{ borderRadius: 12, overflow: "hidden" }}>
                 <div
+                  className="debt-category-header"
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -237,21 +238,22 @@ export default function OverallDebts({ overallDebts = [], financeData = {}, acti
                     <div style={{ fontWeight: 800 }}>{cat}</div>
                     <div style={{ color: "#94a3b8", fontSize: "0.9rem" }}>{list.length} entries</div>
                   </div>
-                  <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                  <div className="debt-group-actions" style={{ display: "flex", gap: 12, alignItems: "center" }}>
                     <button
-                      className="secondary-button"
+                      className="secondary-button debt-group-button"
                       onClick={(e) => {
                         e.stopPropagation();
                         if (onArchiveCategory) onArchiveCategory(cat, activeTab === "myDebts" ? "IOwe" : "TheyOwe");
                       }}
                     >
-                      Archive group
+                      Archive
                     </button>
-                    <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                    <div className="debt-payment-control" style={{ display: "flex", gap: 6, alignItems: "center" }}>
                       <input
                         type="number"
                         min="0"
                         placeholder="Paid"
+                        className="debt-payment-input"
                         value={paymentAmounts[cat] || ""}
                         onChange={(e) => setPaymentAmounts((s) => ({ ...s, [cat]: e.target.value }))}
                         onClick={(e) => e.stopPropagation()}
@@ -291,10 +293,10 @@ export default function OverallDebts({ overallDebts = [], financeData = {}, acti
                         ✓
                       </button>
                     </div>
-                    <div style={{ fontWeight: 800, color: catTotal < 0 ? "#34d399" : "#f87171" }}>
+                    <div className="debt-group-total" style={{ fontWeight: 800, color: catTotal < 0 ? "#34d399" : "#f87171" }}>
                       {catTotal < 0 ? "-" : ""}₱{Math.abs(catTotal).toLocaleString()}
                     </div>
-                    <div style={{ color: "#94a3b8" }}>{isOpen ? "▾" : "▸"}</div>
+                    <div className="debt-chevron" style={{ color: "#94a3b8" }}>{isOpen ? "▾" : "▸"}</div>
                   </div>
                 </div>
 
@@ -320,7 +322,7 @@ export default function OverallDebts({ overallDebts = [], financeData = {}, acti
                             <div style={{ fontWeight: 700 }}>{debt.note || debt.category || "Debt"}</div>
                             <div style={{ color: "#94a3b8", fontSize: "0.9rem" }}>Date: {debt.date || "-"}</div>
                           </div>
-                          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                          <div className="debt-entry-actions" style={{ display: "flex", gap: 12, alignItems: "center" }}>
                             <div style={{ fontWeight: 800, color: isPaid ? "#34d399" : "#f87171" }}>
                               {isPaid ? "-" : ""}₱{Math.abs(amount).toLocaleString()}
                             </div>
@@ -376,6 +378,7 @@ export default function OverallDebts({ overallDebts = [], financeData = {}, acti
               return (
                 <div key={cat} style={{ borderRadius: 12, overflow: "hidden" }}>
                   <div
+                    className="debt-category-header"
                     style={{
                       display: "flex",
                       justifyContent: "space-between",
@@ -390,15 +393,15 @@ export default function OverallDebts({ overallDebts = [], financeData = {}, acti
                       <div style={{ fontWeight: 800 }}>{cat}</div>
                       <div style={{ color: "#94a3b8", fontSize: "0.9rem" }}>{list.length} archived entries</div>
                     </div>
-                    <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                    <div className="debt-group-actions" style={{ display: "flex", gap: 12, alignItems: "center" }}>
                       <button
-                        className="primary-button"
+                        className="primary-button debt-group-button"
                         onClick={(e) => {
                           e.stopPropagation();
                           if (onRestoreCategory) onRestoreCategory(cat, activeTab === "myDebts" ? "IOwe" : "TheyOwe");
                         }}
                       >
-                        Restore group
+                        Restore
                       </button>
                       <button
                         type="button"
@@ -422,11 +425,12 @@ export default function OverallDebts({ overallDebts = [], financeData = {}, acti
                       >
                         ✕
                       </button>
-                      <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                      <div className="debt-payment-control" style={{ display: "flex", gap: 6, alignItems: "center" }}>
                         <input
                           type="number"
                           min="0"
                           placeholder="Paid"
+                          className="debt-payment-input"
                           value={paymentAmounts[cat] || ""}
                           onChange={(e) => setPaymentAmounts((s) => ({ ...s, [cat]: e.target.value }))}
                           onClick={(e) => e.stopPropagation()}
@@ -466,10 +470,10 @@ export default function OverallDebts({ overallDebts = [], financeData = {}, acti
                           ✓
                         </button>
                       </div>
-                      <div style={{ fontWeight: 800, color: catTotal < 0 ? "#34d399" : "#f87171" }}>
+                      <div className="debt-group-total" style={{ fontWeight: 800, color: catTotal < 0 ? "#34d399" : "#f87171" }}>
                         {catTotal < 0 ? "-" : ""}₱{Math.abs(catTotal).toLocaleString()}
                       </div>
-                      <div style={{ color: "#94a3b8" }}>{isOpen ? "▾" : "▸"}</div>
+                      <div className="debt-chevron" style={{ color: "#94a3b8" }}>{isOpen ? "▾" : "▸"}</div>
                     </div>
                   </div>
                   {isOpen && (
@@ -493,7 +497,7 @@ export default function OverallDebts({ overallDebts = [], financeData = {}, acti
                               <div style={{ fontWeight: 700 }}>{debt.note || debt.category || "Debt"}</div>
                               <div style={{ color: "#94a3b8", fontSize: "0.9rem" }}>Date: {debt.date || "-"}</div>
                             </div>
-                            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                            <div className="debt-entry-actions" style={{ display: "flex", gap: 12, alignItems: "center" }}>
                               <div style={{ fontWeight: 800, color: isPaid ? "#34d399" : "#f87171" }}>
                                 {isPaid ? "-" : ""}₱{Math.abs(signAmount(debt)).toLocaleString()}
                               </div>
