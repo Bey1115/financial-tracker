@@ -255,10 +255,14 @@ button {
 }
 
 .primary-button {
-  background: linear-gradient(135deg, #2563eb, #22d3ee);
-  color: #f8fafc;
+  /* background: linear-gradient(135deg, #2563eb, #22d3ee);
+  color: #f8fafc; */
+  background-color: #d4c7b1;
+  color: #5a4a3c;
   box-shadow: 0 18px 32px rgba(34, 211, 238, 0.18);
 }
+
+
 
 .secondary-button {
   background: rgba(148, 163, 184, 0.12);
