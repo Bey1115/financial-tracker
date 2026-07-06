@@ -2071,3 +2071,13 @@ input[type="checkbox"]:hover {
     font-size: 1.5rem;
   }
 }
+
+.debt-label {
+  color: #5a4a3c;
+}
+
+@media (max-width: 900px) {
+  .debt-label {
+    color: #5a4a3c;
+  }
+}
