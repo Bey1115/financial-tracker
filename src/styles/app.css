@@ -1378,9 +1378,9 @@ input[type="checkbox"]:hover {
   display: none;
 }
 
-.desktop-only {
+/* .desktop-only {
   /* visible by default */
-}
+/* } */ */
 
 .desktop-header {
   display: flex;
@@ -1862,13 +1862,15 @@ input[type="checkbox"]:hover {
     background: #e7e0d5;
     border: none;
     /* box-shadow: 0 18px 32px rgba(0, 0, 0, 0.08); */
-    padding: 10px 12px;
+    padding: 20px 22px;
     margin-bottom: 20px;
   }
 
   .mobile-balance-card.card.saving .mobile-balance-icon {
-    background: #d4c7b1;
-    color: #7a6c5d;
+    /* background: #d4c7b1;
+    color: #7a6c5d; */
+    background: #e8eef5;
+    color: #6b8fb5;
   }
 
   .mobile-balance-card.card.saving .mobile-balance-label {
@@ -1876,7 +1878,8 @@ input[type="checkbox"]:hover {
   }
 
   .mobile-balance-card.card.saving .mobile-balance-amount {
-    color: #5a4a3c;
+    /* color: #5a4a3c; */
+    color: #6b8fb5;
   }
 
   .goal-card {
