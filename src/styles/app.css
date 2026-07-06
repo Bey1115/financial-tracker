@@ -1857,30 +1857,30 @@ input[type="checkbox"]:hover {
     background: rgba(61, 52, 41, 0.5);
   }
 
-  /* Overall Savings page mobile theme matching dashboard */
+  /* Overall Savings page mobile theme matching dashboard - beige theme */
   .mobile-balance-card.card.saving {
-    background: linear-gradient(180deg, #2563eb, #60a5fa);
+    background: #e7e0d5;
     border: none;
-    box-shadow: 0 18px 32px rgba(34, 211, 238, 0.18);
-    padding: 20px 22px;
+    /* box-shadow: 0 18px 32px rgba(0, 0, 0, 0.08); */
+    padding: 10px 12px;
     margin-bottom: 20px;
   }
 
   .mobile-balance-card.card.saving .mobile-balance-icon {
-    background: rgba(255, 255, 255, 0.2);
-    color: #f8fafc;
+    background: #d4c7b1;
+    color: #7a6c5d;
   }
 
   .mobile-balance-card.card.saving .mobile-balance-label {
-    color: rgba(226, 232, 240, 0.78);
+    color: #7a6c5d;
   }
 
   .mobile-balance-card.card.saving .mobile-balance-amount {
-    color: #f8fafc;
+    color: #5a4a3c;
   }
 
   .goal-card {
-    background: #ebe4dc;
+    background: #fcfaf7;
     border: none;
     border-radius: 16px;
     padding: 16px;
@@ -1888,13 +1888,173 @@ input[type="checkbox"]:hover {
   }
 
   .goal-card .goal-action-button {
-    background: #d9cfc3;
-    color: #6b6156;
+    background: #e7e0d5;
+    color: #7a6c5d;
     border: none;
   }
 
   .goal-card .goal-action-button:hover {
-    background: #c9bfb3;
+    background: #d4c7b1;
+  }
+
+  .goal-card div[style*="background: 'rgba(255,255,255,0.1)'"] {
+    background: #d4c7b1 !important;
+  }
+
+  .goal-card div[style*="background: '#60a5fa'"] {
+    background: #a38b70 !important;
+  }
+
+  .overall-savings-page {
+    background-color: #f5f2ed;
+  }
+
+  .overall-savings-page h2 {
+    color: #5a4a3c;
+  }
+
+  .overall-savings-page label {
+    color: #5a4a3c;
+  }
+
+  .overall-savings-page input,
+  .overall-savings-page select {
+    background-color: #fcfaf7;
+    border: 1px solid #d4c7b1;
+    color: #5a4a3c;
+  }
+
+  .overall-savings-page .secondary-button {
+    background-color: #d4c7b1;
+    color: #5a4a3c;
+  }
+
+  .overall-savings-page .secondary-button:hover {
+    background-color: #a38b70;
+    color: #fcfaf7;
+  }
+
+  .overall-savings-page .primary-button {
+    background-color: #a38b70;
+    color: #fcfaf7;
+  }
+
+  .overall-savings-page .primary-button:hover {
+    background-color: #7a6c5d;
+  }
+
+  /* Expenses Statistics page beige theme */
+  .expenses-statistics-page {
+    background-color: #f5f2ed;
+  }
+
+  .expenses-statistics-page h2 {
+    color: #5a4a3c;
+  }
+
+  .expenses-statistics-page .stats-filter-panel {
+    background: #fcfaf7;
+    border-color: #d4c7b1;
+  }
+
+  .expenses-statistics-page .stats-category-panel {
+    background: #fcfaf7;
+    border-color: #d4c7b1;
+  }
+
+  .expenses-statistics-page .stats-progress-track {
+    background: #d4c7b1;
+  }
+
+  .expenses-statistics-page .stats-progress-fill {
+    background: #a38b70;
+  }
+
+  .expenses-statistics-page .stats-period-breakdown span {
+    background: #e7e0d5;
+    color: #7a6c5d;
+  }
+
+  .expenses-statistics-page .secondary-button {
+    background-color: #d4c7b1;
+    color: #5a4a3c;
+  }
+
+  .expenses-statistics-page .secondary-button:hover {
+    background-color: #a38b70;
+    color: #fcfaf7;
+  }
+
+  .expenses-statistics-page input,
+  .expenses-statistics-page select {
+    background-color: #fcfaf7;
+    border-color: #d4c7b1;
+    color: #5a4a3c;
+  }
+
+  /* Overall Debts page beige theme */
+  .overall-debts-page {
+    background-color: #f5f2ed;
+  }
+
+  .overall-debts-page h2 {
+    color: #5a4a3c;
+  }
+
+  .overall-debts-page .card {
+    background: #e7e0d5;
+    border: none;
+  }
+
+  .overall-debts-page .card.debt {
+    background: #e7e0d5;
+  }
+
+  .overall-debts-page .debt-category-header {
+    background: #fcfaf7;
+    border-color: #d4c7b1;
+  }
+
+  .overall-debts-page .debt-group-button {
+    background: #d4c7b1;
+    color: #5a4a3c;
+  }
+
+  .overall-debts-page .debt-group-button:hover {
+    background: #a38b70;
+    color: #fcfaf7;
+  }
+
+  .overall-debts-page .debt-payment-input {
+    background: #fcfaf7;
+    border-color: #d4c7b1;
+    color: #5a4a3c;
+  }
+
+  .overall-debts-page .secondary-button {
+    background-color: #d4c7b1;
+    color: #5a4a3c;
+  }
+
+  .overall-debts-page .secondary-button:hover {
+    background-color: #a38b70;
+    color: #fcfaf7;
+  }
+
+  .overall-debts-page .primary-button {
+    background-color: #a38b70;
+    color: #fcfaf7;
+  }
+
+  .overall-debts-page .primary-button:hover {
+    background-color: #7a6c5d;
+  }
+
+  .overall-debts-page input,
+  .overall-debts-page select {
+    background-color: #fcfaf7;
+    border-color: #d4c7b1;
+    color: #5a4a3c;
   }
 }
 
