@@ -140,14 +140,14 @@ export default function OverallDebts({ overallDebts = [], financeData = {}, acti
       <div className="debt-total-row" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         {activeTab === "myDebts" ? (
           <div className="card balance" style={{ marginBottom: 28, flex: 1 }}>
-            <p className="card-label"
-            style={{ color: "#5a4a3c" }} >Total I Owe</p>
+            <p className="card-label" style={{ color: "red" }}>
+              Total I Owe </p>
             <h3>₱{myDebtsTotal.toLocaleString()}</h3>
           </div>
         ) : (
           <div className="card saving" style={{ marginBottom: 28, flex: 1 }}>
-            <p className="card-label"
-            style={{ color: "#5a4a3c" }} >Total Owed to Me</p>
+            <p className="card-label" style={{ color: "red" }}>
+              Total Owed to Me </p>
             <h3>₱{theirDebtsTotal.toLocaleString()}</h3>
           </div>
         )}
