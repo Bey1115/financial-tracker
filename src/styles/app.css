@@ -342,7 +342,8 @@ button.card.filter-card.active {
 }
 
 .card-label {
-  color: rgba(226, 232, 240, 0.78);
+  /* color: rgba(226, 232, 240, 0.78); */
+  color: #8a7f72;
   margin-bottom: 10px;
 }
 
